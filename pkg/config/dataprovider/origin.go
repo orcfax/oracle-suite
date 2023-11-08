@@ -1,4 +1,4 @@
-//  Copyright (C) 2021-2023 Chronicle Labs, Inc.
+//  Copyright (C) 2021-2023 Chronicle Labs, Inc. 2023 Orcfax Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Affero General Public License as
@@ -17,12 +17,27 @@ package dataprovider
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/origin"
 	utilHCL "github.com/chronicleprotocol/oracle-suite/pkg/util/hcl"
 
 	"github.com/hashicorp/hcl/v2"
 )
+
+// Configure UserAgent dynamically through build parameters and
+// initialize below. Export for verification in gofer version info.
+var UserAgent string
+
+var userAgentApp = "orcfax-chronicle-collector"
+
+// version is added dynamically through -ldflags options providing
+// access to release tags.
+var version = "0.0.0"
+
+func init() {
+	UserAgent = fmt.Sprintf("%s/%s", userAgentApp, version)
+}
 
 type configOrigin struct {
 	// Name of the origin.
@@ -193,10 +208,15 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 	case *configOriginStatic:
 		return origin.NewStatic(), nil
 	case *configOriginTickGenericJQ:
+		// Add an Orcfax user-agent.
+		headers := http.Header{}
+		headers.Add("user-agent", UserAgent)
 		origin, err := origin.NewTickGenericJQ(origin.TickGenericJQConfig{
-			URL:     o.URL,
-			Query:   o.JQ,
-			Headers: nil,
+			URL:   o.URL,
+			Query: o.JQ,
+			// Headers are nil in the default configuration. We set
+			// these for Orcfax here.
+			Headers: headers,
 			Client:  d.HTTPClient,
 			Logger:  d.Logger,
 		})

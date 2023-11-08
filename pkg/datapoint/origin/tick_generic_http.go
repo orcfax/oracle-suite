@@ -1,4 +1,4 @@
-//  Copyright (C) 2021-2023 Chronicle Labs, Inc.
+//  Copyright (C) 2021-2023 Chronicle Labs, Inc. 2023 Orcfax Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,10 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"encoding/json"
+
+	b64 "github.com/cristalhq/base64"
 
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
@@ -126,6 +130,7 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 		}
 		defer res.Body.Close()
 
+		responseHeader, _ := json.MarshalIndent(res.Header, "", "  ")
 		resPoints, err := g.callback(ctx, pairs, res.Body)
 		if err != nil {
 			fillDataPointsWithError(points, pairs, err)
@@ -134,6 +139,22 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 
 		// Run callback function.
 		for pair, point := range resPoints {
+			// NB: Meta may be initialized later with the following
+			// data:
+			//
+			// map[
+			//   expiry_threshold:5m0s
+			//   freshness_threshold:1m0s
+			//   origin:bitstamp
+			//   query:ADA/EUR
+			//   type:origin
+			// ]
+			//
+			point.Meta = make(map[string]any)
+			// Add Orcfax metadata.
+			point.Meta["headers"] = b64.StdEncoding.EncodeToString([]byte(responseHeader))
+			point.Meta["request_url"] = url
+			point.Meta["collector"] = "tick_generic_jq"
 			points[pair] = point
 		}
 	}

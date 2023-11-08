@@ -210,7 +210,7 @@ gofer {
   # RPC agent address for the Gofer agent to connect to. The address must be in the format `host:port`.
   # Optional. If empty, Gofer use local price models instead of asking the agent.
   rpc_agent_addr = "127.0.0.1:9101"
-  
+
   # Origin configuration. If label and type are the same, the default origin is replaced with the one defined here.
   origin "uniswapV3" {
     # Base origin type.
@@ -261,7 +261,7 @@ gofer {
 }
 
 # Gofer origins and hooks may require access to Ethereum blockchain. This section defines Ethereum clients
-# used by Gofer. 
+# used by Gofer.
 # Optional.
 ethereum {
   # Configuration for Ethereum clients. The client name is used to reference the client in other sections.

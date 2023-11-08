@@ -1,4 +1,4 @@
-//  Copyright (C) 2021-2023 Chronicle Labs, Inc.
+//  Copyright (C) 2021-2023 Chronicle Labs, Inc. 2023 Orcfax Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Affero General Public License as
@@ -29,6 +29,7 @@ import (
 	"github.com/chronicleprotocol/oracle-suite/cmd"
 	gofer "github.com/chronicleprotocol/oracle-suite/pkg/config/gofernext"
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
+	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
 	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
 	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
 	"github.com/chronicleprotocol/oracle-suite/pkg/util/treerender"
@@ -93,6 +94,8 @@ func marshalDataPoints(points map[string]datapoint.Point, format string) ([]byte
 		return marshalDataPointsTrace(points)
 	case formatJSON:
 		return marshalDataPointsJSON(points)
+	case formatOrcfax:
+		return marshallDataPointsOrcfax(points)
 	default:
 		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
@@ -128,4 +131,14 @@ func marshalDataPointsTrace(points map[string]datapoint.Point) ([]byte, error) {
 
 func marshalDataPointsJSON(points map[string]datapoint.Point) ([]byte, error) {
 	return json.Marshal(points)
+}
+
+func marshallDataPointsOrcfax(points map[string]datapoint.Point) ([]byte, error) {
+	ret := make(map[string]value.OrcfaxMessage)
+	for _, name := range maputil.SortKeys(points, sort.Strings) {
+		bts, _ := points[name].MarshalOrcfax()
+		ret[name] = bts
+	}
+	orcfaxData, _ := json.Marshal(ret)
+	return orcfaxData, nil
 }

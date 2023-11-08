@@ -1,0 +1,61 @@
+project_name: gofer
+builds:
+- main: ./cmd/gofer/
+  env: [CGO_ENABLED=0]
+  goos:
+    - linux
+    - windows
+    - darwin
+    - freebsd
+  ignore:
+    - goos: darwin
+      goarch: arm64
+    - goos: freebsd
+      goarch: 386
+    - goos: freebsd
+      goarch: arm64
+    - goos: freebsd
+      goarch: amd64
+    - goos: windows
+      goarch: arm64
+    - goos: windows
+      goarch: 386
+    - goos: windows
+      goarch: amd64
+  ldflags:
+    -s
+    -w
+    -X main.appname={{.ProjectName}}
+    -X main.version={{.Version}}
+    -X main.commit={{.Commit}}
+    -X main.date={{.Date}}
+    -X main.builtBy=orcfax-goreleaser
+    -X github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider.version={{.Version}}
+archives:
+- name_template: >-
+    {{ .ProjectName }}_{{ .Version }}_
+    {{- title .Os }}_
+    {{- if eq .Arch "amd64" }}x86_64
+    {{- else if eq .Arch "386" }}i386
+    {{- else if eq .Arch "arm64" }}arm64
+    {{- else }}{{ .Arch }}{{ end }}
+  format: tar.gz
+  format_overrides:
+     - goos: windows
+       format: zip
+checksum:
+  name_template: 'checksums_sha256.txt'
+  algorithm: sha256
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+signs:
+  - id: checksum_objects
+    artifacts: checksum
+    args: ["-u", "ross@orcfax.io", "--output", "${signature}", "--detach-sign", "${artifact}"]
+  - id: binary_objects
+    artifacts: binary
+    args: ["-u", "ross@orcfax.io", "--output", "${signature}", "--detach-sign", "${artifact}"]

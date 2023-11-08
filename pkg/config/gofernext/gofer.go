@@ -1,4 +1,4 @@
-//  Copyright (C) 2021-2023 Chronicle Labs, Inc.
+//  Copyright (C) 2021-2023 Chronicle Labs, Inc. 2023 Orcfax Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Affero General Public License as
@@ -89,13 +89,20 @@ func (c *Config) Services(baseLogger log.Logger, appName, appVersion string) (pk
 	if err != nil {
 		return nil, err
 	}
+
+	/* Ethereum client is disabled for Orcfax's purposes. If it is needed
+	   in the future then more granular config might be useful here. E.g.
+	   to extend Gofer, a Cardano/Ogmios client could be configured and
+	   supplied to the priceProvider.
+
 	clients, err := c.Ethereum.ClientRegistry(ethereumConfig.Dependencies{Logger: logger})
 	if err != nil {
 		return nil, err
-	}
+	}*/
+
 	priceProvider, err := c.Gofer.ConfigureDataProvider(dataproviderConfig.Dependencies{
 		HTTPClient: &http.Client{},
-		Clients:    clients,
+		Clients:    nil,
 		Logger:     logger,
 	})
 	if err != nil {

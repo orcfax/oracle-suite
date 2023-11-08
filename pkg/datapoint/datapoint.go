@@ -1,4 +1,4 @@
-//  Copyright (C) 2021-2023 Chronicle Labs, Inc.
+//  Copyright (C) 2021-2023 Chronicle Labs, Inc. 2023 Orcfax Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Affero General Public License as
@@ -214,6 +214,12 @@ func (p Point) MarshalTrace() ([]byte, error) {
 			points = append(points, t)
 		}
 		for k, v := range point.Meta {
+			// The trace report is sensitive to changes in what is
+			// received and so fields are ignored that shouldn't appear
+			// in the output.
+			if k == "headers" || k == "collector" || k == "request_url" {
+				continue
+			}
 			if k == "type" {
 				typ, _ = v.(string)
 				continue

@@ -1,5 +1,4 @@
 # Some popular IDEs
-.vscode
 .idea
 
 # Binaries for programs and plugins
@@ -33,3 +32,4 @@ go.work
 .DS_Store
 node_modules/
 /package*.json
+analysis/*
