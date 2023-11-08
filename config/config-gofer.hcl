@@ -197,13 +197,70 @@ gofer {
   data_model "USDT/USD" {
     median {
       min_values = 3
-      alias "USDT/USD" {
-        origin "bitfinex" { query = "UST/USD" }
-      }
+      origin "bitstamp" { query = "USDT/USD" }
+      origin "bitfinex" { query = "USDT/USD" }
       origin "coinbase" { query = "USDT/USD" }
       origin "kraken" { query = "USDT/USD" }
+      origin "kucoin" { query = "USDT/USD" }
+      origin "okx" { query = "USDT/USD" }
+      origin "upbit" { query = "USDT/USD" }
     }
   }
 
+  data_model "ADA/BTC" {
+    median {
+      min_values = 3
+      origin "bitstamp" { query = "ADA/BTC" }
+      origin "coinbase" { query = "ADA/BTC" }
+      origin "kraken" { query = "ADA/BTC" }
+      origin "okx" { query = "ADA/BTC" }
+      origin "upbit" { query = "ADA/BTC" }
+      origin "binance" { query = "ADA/BTC" }
+      origin "hitbtc" { query = "ADA/BTC" }
+      origin "huobi" { query = "ADA/BTC" }
+    }
+  }
+
+  data_model "ADA/EUR" {
+    median {
+      min_values = 3
+      origin "bitstamp" { query = "ADA/EUR" }
+      origin "coinbase" { query = "ADA/EUR" }
+      origin "kraken" { query = "ADA/EUR" }
+      origin "binance" { query = "ADA/EUR" }
+    }
+  }
+
+  data_model "ADA/USD" {
+    median {
+      min_values = 3
+      origin "bitstamp" { query = "ADA/USD" }
+      origin "coinbase" { query = "ADA/USD" }
+      origin "kraken" { query = "ADA/USD" }
+      origin "bitfinex" { query = "ADA/USD" }
+      origin "hitbtc" { query = "ADA/USD" }
+    }
+  }
+
+  // TUSD doesn't have enough sources. It can currently only be
+  // retrieved from Kraken. The origins below are a useful reference
+  // point for new data models as it tries to retrieve from all.
+  data_model "TUSD/USD" {
+    median {
+      min_values = 3
+      origin "binance" { query = "TUSD/USD" }
+      origin "bitstamp" { query = "TUSD/USD" }
+      origin "bitfinex" { query = "TUSD/USD" }
+      origin "coinbase" { query = "TUSD/USD" }
+      origin "gemini" { query = "TUSD/USD" }
+      origin "hitbtc" { query = "TUSD/USD" }
+      origin "huobi" { query = "TUSD/USD" }
+      origin "ishares" { query = "TUSD/USD" }
+      origin "kraken" { query = "TUSD/USD" }
+      origin "kucoin" { query = "TUSD/USD" }
+      origin "okx" { query = "TUSD/USD" }
+      origin "upbit" { query = "TUSD/USD" }
+    }
+  }
 }
 
