@@ -22,6 +22,10 @@ import (
 	"net/http"
 	"strings"
 
+	"encoding/json"
+
+	b64 "github.com/cristalhq/base64"
+
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
 	"github.com/chronicleprotocol/oracle-suite/pkg/log"
@@ -96,6 +100,7 @@ func NewTickGenericHTTP(config TickGenericHTTPConfig) (*TickGenericHTTP, error) 
 
 // FetchDataPoints implements the Origin interface.
 func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map[any]datapoint.Point, error) {
+
 	pairs, ok := queryToPairs(query)
 	if !ok {
 		return nil, fmt.Errorf("invalid query type: %T, expected []Pair", query)
@@ -126,6 +131,7 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 		}
 		defer res.Body.Close()
 
+		responseHeader, _ := json.MarshalIndent(res.Header, "", "  ")
 		resPoints, err := g.callback(ctx, pairs, res.Body)
 		if err != nil {
 			fillDataPointsWithError(points, pairs, err)
@@ -134,6 +140,22 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 
 		// Run callback function.
 		for pair, point := range resPoints {
+			// NB: Meta may be initialized later with the following
+			// data:
+			//
+			// map[
+			//   expiry_threshold:5m0s
+			//   freshness_threshold:1m0s
+			//   origin:bitstamp
+			//   query:ADA/EUR
+			//   type:origin
+			// ]
+			//
+			point.Meta = make(map[string]any)
+			// Add Orcfax metadata.
+			point.Meta["headers"] = b64.StdEncoding.EncodeToString([]byte(responseHeader))
+			point.Meta["request_url"] = url
+			point.Meta["collector"] = "tick_generic_jq"
 			points[pair] = point
 		}
 	}

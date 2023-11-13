@@ -24,9 +24,10 @@ import (
 )
 
 const (
-	formatPlain = "plain"
-	formatTrace = "trace"
-	formatJSON  = "json"
+	formatPlain  = "plain"
+	formatTrace  = "trace"
+	formatJSON   = "json"
+	formatOrcfax = "orcfax"
 )
 
 type formatTypeValue struct {
@@ -48,6 +49,8 @@ func (v *formatTypeValue) Set(s string) error {
 		v.format = formatTrace
 	case formatJSON:
 		v.format = formatJSON
+	case formatOrcfax:
+		v.format = formatOrcfax
 	default:
 		return fmt.Errorf("unsupported format: %s", s)
 	}
@@ -55,7 +58,7 @@ func (v *formatTypeValue) Set(s string) error {
 }
 
 func (v *formatTypeValue) Type() string {
-	return "plain|trace|json"
+	return "plain|trace|json|orcfax"
 }
 
 func getModelsNames(ctx context.Context, provider datapoint.Provider, args []string) []string {

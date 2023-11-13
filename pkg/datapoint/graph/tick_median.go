@@ -17,6 +17,7 @@ package graph
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"time"
 
@@ -58,6 +59,9 @@ func (n *TickMedianNode) Nodes() []Node {
 
 // DataPoint implements the Node interface.
 func (n *TickMedianNode) DataPoint() datapoint.Point {
+
+	log.Println("calculating median from data points")
+
 	var (
 		tm     time.Time
 		points []datapoint.Point
@@ -69,6 +73,7 @@ func (n *TickMedianNode) DataPoint() datapoint.Point {
 	// median.
 	for _, node := range n.nodes {
 		point := node.DataPoint()
+
 		if tm.IsZero() {
 			tm = point.Time
 		}

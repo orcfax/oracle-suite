@@ -17,8 +17,10 @@ package datapoint
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/defiweb/go-eth/types"
@@ -227,6 +229,95 @@ func (p Point) MarshalTrace() ([]byte, error) {
 			Error:     point.Validate(),
 		}
 	}, []any{p}, 0), nil
+}
+
+// createContentSignature provides a rudimentary way to create a
+// checksum to validate a collector's message against. The message
+// helps to prove the origin of a message and helps to protect against
+// rounding errors using floating point numbers.
+func createContentSignature(timestamp string, values []float64, nodeID string) string {
+	/* Reference impl:
+
+	```golang
+		hash := sha256.New()
+		hash.Write([]byte("2023-09-12T14:08:15Z"))
+		hash.Write([]byte("0.248848"))
+		hash.Write([]byte("0.2489"))
+		hash.Write([]byte("0.2488563207"))
+		hash.Write([]byte("9165f28e-012e-4790-bf38-cce43184bc7d"))
+		hexHash := fmt.Sprintf("%x", bs)
+		hexHash == "6dd329aaba26cf4d1175eafef13e8f49b41d2c36be6832987cb559bd715dcfd2"
+	```
+	*/
+
+	hash := sha256.New()
+	hash.Write([]byte(timestamp))
+	for _, value := range values {
+		precisionFloatAsString := strconv.FormatFloat(value, 'g', -1, 64)
+		hash.Write([]byte(precisionFloatAsString))
+	}
+	hash.Write([]byte(nodeID))
+	hashBytes := hash.Sum(nil)
+	hexHash := fmt.Sprintf("%x", hashBytes)
+	return string(hexHash)
+}
+
+// convertPrice is a placeholder function that allows us to create a
+// float from a value.Tick type where I am not currently sure the
+// best way to access this data without casting/conversion.
+func convertPrice(price value.Tick) float64 {
+	priceAsFloat, _ := strconv.ParseFloat(price.Price.String(), 64)
+	return priceAsFloat
+}
+
+// MarshalOrcfax returns an Orcfax validator collector profile,
+func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
+
+	const utcTimeFormat = "2006-01-02T15:04:05Z"
+
+	price := p.Value.(value.Tick)
+
+	collectorData := value.OrcfaxCollectorData{}
+
+	calculated := convertPrice(price)
+	collectorData.CalculatedValue = calculated
+
+	collectorData.Timestamp = time.Now().UTC().Format(utcTimeFormat)
+
+	var dataPoints []float64
+	var rawData []value.OrcfaxRaw
+
+	for _, t := range p.SubPoints {
+		for _, tt := range t.SubPoints {
+			priceConverted := convertPrice(tt.Value.(value.Tick))
+			dataPoints = append(dataPoints, priceConverted)
+			raw := value.OrcfaxRaw{}
+			raw.Response = tt.Meta["headers"].(string)
+			raw.RequestURL = tt.Meta["request_url"].(string)
+			raw.Collector = fmt.Sprintf("%s.%s", tt.Meta["origin"], tt.Meta["collector"])
+			raw.RequestTimestamp = tt.Time.UTC().Format(utcTimeFormat)
+			rawData = append(rawData, raw)
+		}
+	}
+
+	collectorData.DataPoints = dataPoints
+	collectorData.Raw = rawData
+	collectorData.ContentSignature = createContentSignature(
+		collectorData.Timestamp,
+		collectorData.DataPoints,
+		"todo-provide-a-node-identifier-here",
+	)
+
+	// NB. This is the Chronicle Labs concept of validation. We need to
+	// verify this and also augment it with ours.
+	if err := p.Validate(); err != nil {
+		collectorData.Errors = append(collectorData.Errors, err.Error())
+	}
+
+	msg := value.OrcfaxMessage{}
+	msg.Message = collectorData
+
+	return msg, nil
 }
 
 func PointLogFields(p Point) log.Fields {
