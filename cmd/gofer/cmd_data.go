@@ -134,8 +134,7 @@ func marshalDataPointsJSON(points map[string]datapoint.Point) ([]byte, error) {
 }
 
 func marshallDataPointsOrcfax(points map[string]datapoint.Point) ([]byte, error) {
-	var ret map[string]value.OrcfaxMessage
-	ret = make(map[string]value.OrcfaxMessage)
+	ret := make(map[string]value.OrcfaxMessage)
 	for _, name := range maputil.SortKeys(points, sort.Strings) {
 		bts, _ := points[name].MarshalOrcfax()
 		ret[name] = bts
