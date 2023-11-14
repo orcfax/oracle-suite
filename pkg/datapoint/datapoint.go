@@ -20,8 +20,9 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"time"
+
+	lg "log"
 
 	"github.com/defiweb/go-eth/types"
 
@@ -240,7 +241,7 @@ func (p Point) MarshalTrace() ([]byte, error) {
 // checksum to validate a collector's message against. The message
 // helps to prove the origin of a message and helps to protect against
 // rounding errors using floating point numbers.
-func createContentSignature(timestamp string, values []float64, nodeID string) string {
+func createContentSignature(timestamp string, values []string, nodeID string) string {
 	/* Reference impl:
 
 	```golang
@@ -258,8 +259,7 @@ func createContentSignature(timestamp string, values []float64, nodeID string) s
 	hash := sha256.New()
 	hash.Write([]byte(timestamp))
 	for _, value := range values {
-		precisionFloatAsString := strconv.FormatFloat(value, 'g', -1, 64)
-		hash.Write([]byte(precisionFloatAsString))
+		hash.Write([]byte(value))
 	}
 	hash.Write([]byte(nodeID))
 	hashBytes := hash.Sum(nil)
@@ -267,12 +267,8 @@ func createContentSignature(timestamp string, values []float64, nodeID string) s
 	return string(hexHash)
 }
 
-// convertPrice is a placeholder function that allows us to create a
-// float from a value.Tick type where I am not currently sure the
-// best way to access this data without casting/conversion.
-func convertPrice(price value.Tick) float64 {
-	priceAsFloat, _ := strconv.ParseFloat(price.Price.String(), 64)
-	return priceAsFloat
+func convertPrice(price value.Tick) (string, error) {
+	return price.Price.String(), nil
 }
 
 // MarshalOrcfax returns an Orcfax validator collector profile,
@@ -284,24 +280,57 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
 	collectorData := value.OrcfaxCollectorData{}
 
-	calculated := convertPrice(price)
+	calculated, _ := convertPrice(price)
 	collectorData.CalculatedValue = calculated
 
 	collectorData.Timestamp = time.Now().UTC().Format(utcTimeFormat)
 
-	var dataPoints []float64
+	var dataPoints []string
 	var rawData []value.OrcfaxRaw
+
+	lg.Println("nb. ADA/BTC requires further testing, e.g. for expired data points")
 
 	for _, t := range p.SubPoints {
 		for _, tt := range t.SubPoints {
-			priceConverted := convertPrice(tt.Value.(value.Tick))
-			dataPoints = append(dataPoints, priceConverted)
+			origin := tt.Meta["origin"]
+			collector := tt.Meta["collector"]
+			subPointTick, ok := tt.Value.(value.Tick)
+			if !ok {
+				collectorData.Errors = append(
+					collectorData.Errors,
+					fmt.Sprintf(
+						"error with type casting '%s' tick",
+						origin,
+					),
+				)
+				// continue onto the next collector.
+				continue
+			}
+			priceConverted, err := convertPrice(subPointTick)
+			if err != nil {
+				collectorData.Errors = append(collectorData.Errors, fmt.Sprintf("%s", err))
+				continue
+			}
+			val, ok := tt.Meta["headers"].(string)
+			if !ok {
+				collectorData.Errors = append(
+					collectorData.Errors,
+					fmt.Sprintf(
+						"error with type casting '%s' header",
+						origin,
+					),
+				)
+				// continue onto the next collector.
+				continue
+			}
+			// Continue to add to the raw data output.
 			raw := value.OrcfaxRaw{}
-			raw.Response = tt.Meta["headers"].(string)
+			raw.Collector = fmt.Sprintf("%s.%s", origin, collector)
+			raw.Response = val
 			raw.RequestURL = tt.Meta["request_url"].(string)
-			raw.Collector = fmt.Sprintf("%s.%s", tt.Meta["origin"], tt.Meta["collector"])
 			raw.RequestTimestamp = tt.Time.UTC().Format(utcTimeFormat)
 			rawData = append(rawData, raw)
+			dataPoints = append(dataPoints, priceConverted)
 		}
 	}
 

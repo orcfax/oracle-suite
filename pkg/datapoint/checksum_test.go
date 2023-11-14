@@ -8,10 +8,10 @@ import (
 // created consistently for Orcfax v1's needs.
 func TestContentSignature(t *testing.T) {
 	timestamp := "2023-09-12T14:08:15Z"
-	dataPoints := []float64{
-		0.248848,
-		0.2489,
-		0.2488563207,
+	dataPoints := []string{
+		"0.248848",
+		"0.2489",
+		"0.2488563207",
 	}
 	nodeID := "9165f28e-012e-4790-bf38-cce43184bc7d"
 	contentSignature := createContentSignature(timestamp, dataPoints, nodeID)
