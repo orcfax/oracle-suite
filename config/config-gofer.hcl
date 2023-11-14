@@ -6,10 +6,22 @@ gofer {
     jq   = ".[] | select(.symbol == ($ucbase + $ucquote)) | {price: .lastPrice, volume: .volume, time: (.closeTime / 1000)}"
   }
 
+  origin "binance_simple" {
+    type = "tick_generic_jq"
+    url  = "https://api.binance.com/api/v3/ticker/24hr?symbol=$${ucbase}$${ucquote}"
+    jq   = "select(.symbol == ($ucbase + $ucquote)) | {price: .lastPrice, volume: .volume, time: (.closeTime / 1000)}"
+  }
+
   origin "bitfinex" {
     type = "tick_generic_jq"
     url  = "https://api-pub.bitfinex.com/v2/tickers?symbols=ALL"
     jq   = ".[] | select(.[0] == \"t\" + ($ucbase + $ucquote) or .[0] == \"t\" + ($ucbase + \":\" + $ucquote) ) | {price: .[7], time: now|round, volume: .[8]}"
+  }
+
+  origin "bitfinex_simple" {
+    type = "tick_generic_jq"
+    url  = "https://api-pub.bitfinex.com/v2/tickers?symbols=t$${ucbase}$${ucquote}"
+    jq   = "{price: .[][7], time: now|round, volume: .[][8]}"
   }
 
   origin "bitstamp" {
@@ -34,6 +46,9 @@ gofer {
     type = "tick_generic_jq"
     url  = "https://api.hitbtc.com/api/2/public/ticker?symbols=$${ucbase}$${ucquote}"
     jq   = "{price: .[0].last|tonumber, time: .[0].timestamp|strptime(\"%Y-%m-%dT%H:%M:%S.%fZ\")|mktime, volume: .[0].volumeQuote|tonumber}"
+    // An alternative approach without dealing with decimal seconds:
+    //
+    // jq = "{price: .[0].last|tonumber, time: .[0].timestamp|split(\".\")[0]|strptime(\"%Y-%m-%dT%H:%M:%S\")|mktime, volume: .[0].volumeQuote|tonumber}"
   }
 
   origin "huobi" {
@@ -180,7 +195,7 @@ gofer {
     median {
       min_values = 3
       origin "bitstamp" { query = "USDT/USD" }
-      origin "bitfinex" { query = "USDT/USD" }
+      origin "bitfinex_simple" { query = "USDT/USD" }
       origin "coinbase" { query = "USDT/USD" }
       origin "kraken" { query = "USDT/USD" }
       origin "kucoin" { query = "USDT/USD" }
@@ -193,6 +208,7 @@ gofer {
     median {
       min_values = 3
       origin "bitstamp" { query = "ADA/BTC" }
+      origin "bitfinex_simple" { query = "ADA/BTC" }
       origin "coinbase" { query = "ADA/BTC" }
       origin "kraken" { query = "ADA/BTC" }
       origin "okx" { query = "ADA/BTC" }
@@ -209,7 +225,7 @@ gofer {
       origin "bitstamp" { query = "ADA/EUR" }
       origin "coinbase" { query = "ADA/EUR" }
       origin "kraken" { query = "ADA/EUR" }
-      origin "binance" { query = "ADA/EUR" }
+      origin "binance_simple" { query = "ADA/EUR" }
     }
   }
 
@@ -219,7 +235,7 @@ gofer {
       origin "bitstamp" { query = "ADA/USD" }
       origin "coinbase" { query = "ADA/USD" }
       origin "kraken" { query = "ADA/USD" }
-      origin "bitfinex" { query = "ADA/USD" }
+      origin "bitfinex_simple" { query = "ADA/USD" }
       origin "hitbtc" { query = "ADA/USD" }
     }
   }
@@ -232,7 +248,7 @@ gofer {
       min_values = 3
       origin "binance" { query = "TUSD/USD" }
       origin "bitstamp" { query = "TUSD/USD" }
-      origin "bitfinex" { query = "TUSD/USD" }
+      origin "bitfinex_simple" { query = "TUSD/USD" }
       origin "coinbase" { query = "TUSD/USD" }
       origin "gemini" { query = "TUSD/USD" }
       origin "hitbtc" { query = "TUSD/USD" }
