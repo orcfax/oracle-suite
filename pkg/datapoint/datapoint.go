@@ -216,6 +216,11 @@ func (p Point) MarshalTrace() ([]byte, error) {
 			points = append(points, t)
 		}
 		for k, v := range point.Meta {
+			// The trace report is more sensitive to what is output and
+			// so custom fields are ignored.
+			if k == "headers" || k == "collector" || k == "request_url" {
+				continue
+			}
 			if k == "type" {
 				typ, _ = v.(string)
 				continue
