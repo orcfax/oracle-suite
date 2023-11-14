@@ -41,8 +41,8 @@ type OrcfaxMessage struct {
 type OrcfaxCollectorData struct {
 	Timestamp        string                  `json:"timestamp"`
 	Raw              []OrcfaxRaw             `json:"raw"`
-	DataPoints       []float64               `json:"data_points"`
-	CalculatedValue  float64                 `json:"calculated_value"`
+	DataPoints       []string                `json:"data_points"`
+	CalculatedValue  string                  `json:"calculated_value"`
 	Feed             string                  `json:"feed"`
 	Identity         OrcfaxCollectorIdentity `json:"identity"`
 	ContentSignature string                  `json:"content_signature"`
