@@ -31,21 +31,21 @@ import (
 	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
 )
 
-func NewStreamCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags) *cobra.Command {
+func NewStreamCmd(cfg *spire.Config, cf *cmd.ConfigFlags, lf *cmd.LoggerFlags) *cobra.Command {
 	var raw bool
-	cc := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "stream [TOPIC...]",
 		Args:  cobra.MinimumNArgs(0),
 		Short: "Streams data from the network",
-		RunE: func(cc *cobra.Command, topics []string) (err error) {
-			if err := f.Load(c); err != nil {
+		RunE: func(cmd *cobra.Command, topics []string) (err error) {
+			if err := cf.Load(cfg); err != nil {
 				return err
 			}
-			logger := l.Logger()
+			logger := lf.Logger()
 			if len(topics) == 0 {
 				topics = messages.AllMessagesMap.Keys()
 			}
-			services, err := c.StreamServices(logger, cc.Root().Use, cc.Root().Version, topics...)
+			services, err := cfg.StreamServices(logger, cmd.Root().Use, cmd.Root().Version, topics...)
 			if err != nil {
 				return err
 			}
@@ -92,7 +92,7 @@ func NewStreamCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags) *cobr
 						}
 						jsonMsg, err := json.Marshal(m)
 						if err != nil {
-							l.Logger().WithError(err).Error("Failed to marshal message")
+							lf.Logger().WithError(err).Error("Failed to marshal message")
 							continue
 						}
 						fmt.Println(string(jsonMsg))
@@ -100,7 +100,7 @@ func NewStreamCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags) *cobr
 					}
 					jsonMsg, err := json.Marshal(handleMessage(msg))
 					if err != nil {
-						l.Logger().WithError(err).Error("Failed to marshal message")
+						lf.Logger().WithError(err).Error("Failed to marshal message")
 						continue
 					}
 					fmt.Println(string(jsonMsg))
@@ -108,23 +108,23 @@ func NewStreamCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags) *cobr
 			}
 		},
 	}
-	cc.AddCommand(
-		NewStreamPricesCmd(c, f, l),
+	cmd.AddCommand(
+		NewStreamPricesCmd(cfg, cf, lf),
 		NewTopicsCmd(),
 	)
-	cc.Flags().BoolVar(
+	cmd.Flags().BoolVar(
 		&raw,
 		"raw",
 		false,
 		"show raw messages",
 	)
 	var format string
-	cc.Flags().StringVarP(&format, "output", "o", "", "(here for backward compatibility)")
-	return cc
+	cmd.Flags().StringVarP(&format, "output", "o", "", "(here for backward compatibility)")
+	return cmd
 }
 
 func NewTopicsCmd() *cobra.Command {
-	cc := &cobra.Command{
+	return &cobra.Command{
 		Use:   "topics",
 		Args:  cobra.ExactArgs(0),
 		Short: "List all available topics",
@@ -135,17 +135,16 @@ func NewTopicsCmd() *cobra.Command {
 			return nil
 		},
 	}
-	return cc
 }
 
-func NewStreamPricesCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags) *cobra.Command {
+func NewStreamPricesCmd(cfg *spire.Config, cf *cmd.ConfigFlags, lf *cmd.LoggerFlags) *cobra.Command {
 	var legacy bool
-	cc := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "prices",
 		Args:  cobra.ExactArgs(0),
 		Short: "Prints price messages as they are received",
-		RunE: func(cc *cobra.Command, _ []string) (err error) {
-			if err := f.Load(c); err != nil {
+		RunE: func(cmd *cobra.Command, _ []string) (err error) {
+			if err := cf.Load(cfg); err != nil {
 				return err
 			}
 			topic := messages.DataPointV1MessageName
@@ -153,7 +152,7 @@ func NewStreamPricesCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags)
 				topic = messages.PriceV1MessageName //nolint:staticcheck
 			}
 			ctx, ctxCancel := signal.NotifyContext(context.Background(), os.Interrupt)
-			services, err := c.StreamServices(l.Logger(), cc.Root().Use, cc.Root().Version, topic)
+			services, err := cfg.StreamServices(lf.Logger(), cmd.Root().Use, cmd.Root().Version, topic)
 			if err != nil {
 				return err
 			}
@@ -177,7 +176,7 @@ func NewStreamPricesCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags)
 					}
 					jsonMsg, err := json.Marshal(msg.Message)
 					if err != nil {
-						l.Logger().WithError(err).Error("Failed to marshal message")
+						lf.Logger().WithError(err).Error("Failed to marshal message")
 						continue
 					}
 					fmt.Println(string(jsonMsg))
@@ -185,11 +184,11 @@ func NewStreamPricesCmd(c *spire.Config, f *cmd.ConfigFlags, l *cmd.LoggerFlags)
 			}
 		},
 	}
-	cc.Flags().BoolVar(
+	cmd.Flags().BoolVar(
 		&legacy,
 		"legacy",
 		false,
 		"legacy mode",
 	)
-	return cc
+	return cmd
 }
