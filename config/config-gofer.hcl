@@ -245,7 +245,7 @@ gofer {
   // point for new data models as it tries to retrieve from all.
   data_model "TUSD/USD" {
     median {
-      min_values = 3
+      min_values = 1
       origin "binance" { query = "TUSD/USD" }
       origin "bitstamp" { query = "TUSD/USD" }
       origin "bitfinex_simple" { query = "TUSD/USD" }
@@ -258,6 +258,25 @@ gofer {
       origin "kucoin" { query = "TUSD/USD" }
       origin "okx" { query = "TUSD/USD" }
       origin "upbit" { query = "TUSD/USD" }
+    }
+  }
+
+  // WMT is in the same boat.
+  data_model "WMT/USD" {
+    median {
+      min_values = 1
+      origin "binance" { query = "WMT/USD" }
+      origin "bitstamp" { query = "WMT/USD" }
+      origin "bitfinex_simple" { query = "WMT/USD" }
+      origin "coinbase" { query = "WMT/USD" }
+      origin "gemini" { query = "WMT/USD" }
+      origin "hitbtc" { query = "WMT/USD" }
+      origin "huobi" { query = "WMT/USD" }
+      origin "ishares" { query = "WMT/USD" }
+      origin "kraken" { query = "WMT/USD" }
+      origin "kucoin" { query = "WMT/USD" }
+      origin "okx" { query = "WMT/USD" }
+      origin "upbit" { query = "WMT/USD" }
     }
   }
 }
