@@ -16,12 +16,34 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	suite "github.com/chronicleprotocol/oracle-suite"
 	"github.com/chronicleprotocol/oracle-suite/cmd"
 	gofer "github.com/chronicleprotocol/oracle-suite/pkg/config/gofernext"
+	"github.com/spf13/cobra"
 )
+
+var (
+	version = "dev-0.0.0"
+	commit  = "000000000000000000000000000000000baddeed"
+	date    = "1970-01-01T00:00:01Z"
+)
+
+var agent string = fmt.Sprintf("oracle-suite/%s", version)
+
+func versionFunc() *cobra.Command {
+	var versionCmd = &cobra.Command{
+		Use:   "version",
+		Short: "print the version details",
+		Long:  `print the version details`,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Fprintf(os.Stderr, "%s (%s) commit: %s date: %s\n", agent, version, commit, date)
+		},
+	}
+	return versionCmd
+}
 
 func main() {
 	var config gofer.Config
@@ -35,6 +57,7 @@ func main() {
 		cmd.NewRenderConfigCmd(&config, &cf),
 		NewModelsCmd(&config, &cf, &lf),
 		NewDataCmd(&config, &cf, &lf),
+		versionFunc(),
 	)
 
 	if err := c.Execute(); err != nil {
