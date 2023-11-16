@@ -267,8 +267,12 @@ func createContentSignature(timestamp string, values []string, nodeID string) st
 	return string(hexHash)
 }
 
-func convertPrice(price value.Tick) (string, error) {
-	return price.Price.String(), nil
+// priceToString returns a string representation of a price value.
+func priceToString(price value.Tick) (string, error) {
+	if price.Price != nil {
+		return price.Price.String(), nil
+	}
+	return "", fmt.Errorf("price is nil and cannot be converted")
 }
 
 // MarshalOrcfax returns an Orcfax validator collector profile,
@@ -276,15 +280,21 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
 	const utcTimeFormat = "2006-01-02T15:04:05Z"
 
-	price := p.Value.(value.Tick)
+	if p.Error != nil {
+		lg.Printf("to handle, errors if not enough data, e.g. TUSD/USD %s", p.Error)
+		collectorData := value.OrcfaxCollectorData{}
+		msg := value.OrcfaxMessage{}
+		collectorData.Errors = append(collectorData.Errors, fmt.Sprintf("%s", p.Error))
+		msg.Message = collectorData
+		return msg, nil
+	}
 
+	medianPrice := p.Value.(value.Tick)
+	feedPair := medianPrice.Pair
 	collectorData := value.OrcfaxCollectorData{}
-
-	calculated, _ := convertPrice(price)
+	calculated, _ := priceToString(medianPrice)
 	collectorData.CalculatedValue = calculated
-
 	collectorData.Timestamp = time.Now().UTC().Format(utcTimeFormat)
-
 	var dataPoints []string
 	var rawData []value.OrcfaxRaw
 
@@ -299,16 +309,25 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 				collectorData.Errors = append(
 					collectorData.Errors,
 					fmt.Sprintf(
-						"error with type casting '%s' tick",
+						"%s: (%s) error with type casting tick",
+						feedPair,
 						origin,
 					),
 				)
 				// continue onto the next collector.
 				continue
 			}
-			priceConverted, err := convertPrice(subPointTick)
+			priceConverted, err := priceToString(subPointTick)
 			if err != nil {
-				collectorData.Errors = append(collectorData.Errors, fmt.Sprintf("%s", err))
+				collectorData.Errors = append(
+					collectorData.Errors,
+					fmt.Sprintf("%s: (%s) %s",
+						feedPair,
+						origin,
+						err,
+					),
+				)
+				// continue onto the next collector.
 				continue
 			}
 			val, ok := tt.Meta["headers"].(string)
@@ -316,14 +335,15 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 				collectorData.Errors = append(
 					collectorData.Errors,
 					fmt.Sprintf(
-						"error with type casting '%s' header",
+						"%s: ('%s') error with type casting header",
+						feedPair,
 						origin,
 					),
 				)
 				// continue onto the next collector.
 				continue
 			}
-			// Continue to add to the raw data output.
+			// continue to add to the raw data output.
 			raw := value.OrcfaxRaw{}
 			raw.Collector = fmt.Sprintf("%s.%s", origin, collector)
 			raw.Response = val
