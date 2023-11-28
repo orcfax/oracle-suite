@@ -1,6 +1,7 @@
 package value
 
 import (
+	"github.com/chronicleprotocol/oracle-suite/internal/identity"
 	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
 )
 
@@ -39,14 +40,14 @@ type OrcfaxMessage struct {
 // OrcfaxCollectorData is the primary payload for an Orcfax message
 // containing the "collected" and "normalized" data.
 type OrcfaxCollectorData struct {
-	Timestamp        string                  `json:"timestamp"`
-	Raw              []OrcfaxRaw             `json:"raw"`
-	DataPoints       []string                `json:"data_points"`
-	CalculatedValue  string                  `json:"calculated_value"`
-	Feed             string                  `json:"feed"`
-	Identity         OrcfaxCollectorIdentity `json:"identity"`
-	ContentSignature string                  `json:"content_signature"`
-	Errors           []string                `json:"errors"`
+	Timestamp        string            `json:"timestamp"`
+	Raw              []OrcfaxRaw       `json:"raw"`
+	DataPoints       []string          `json:"data_points"`
+	CalculatedValue  string            `json:"calculated_value"`
+	Feed             string            `json:"feed"`
+	Identity         identity.Identity `json:"identity"`
+	ContentSignature string            `json:"content_signature"`
+	Errors           []string          `json:"errors"`
 }
 
 // OrcfaxRaw provides a means of storing raw request/response data from
