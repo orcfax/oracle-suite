@@ -49,6 +49,7 @@ _CONTRACTS="$({
 		wat: .IScribe.wat,
 		address,
 		chain_id:.chainId,
+		bar: .IScribe.bar,
 		is_scribe: (.IScribe != null),
 		is_scribe_optimistic: (.IScribeOptimistic != null),
 		challenge_period:.IScribeOptimistic.opChallengePeriod,
