@@ -1,5 +1,5 @@
 FROM golang:1.20-alpine as builder
-RUN apk --no-cache add git gcc libc-dev linux-headers
+RUN apk --no-cache add git
 
 WORKDIR /app
 
