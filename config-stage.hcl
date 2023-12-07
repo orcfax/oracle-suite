@@ -4,6 +4,7 @@ contract_map = {
   "prod-eth-TorAddressRegister": "0x16515EEe550Fe7ae3b8f70bdfb737a57811B3C96",
   "prod-eth-WatRegistry": "0x594d52fDB6570F07879Bb2AF8a36c3bF00BC7F00",
   "stage-sep-Chainlog": "0xfc71a2e4497d065416A1BBDA103330a381F8D3b1",
+  "stage-sep-FeedRegistry": "0xcBFdA8453e751a35591489A30b4c4b6B44cb2847",
   "stage-sep-TorAddressRegister": "0x504Fdbc4a9386c2C48A5775a6967beB00dAa9E9a",
   "stage-sep-WatRegistry": "0xE5f12C7285518bA5C6eEc15b00855A47C19d9557"
 }
@@ -3343,8 +3344,8 @@ spectre {
       for v in var.contracts : v
       if v.env == var.environment
       && v.chain == var.chain_name
-      && try(split(".", v.version)[0] == "v2", false)
       && try(v.is_scribe, false) && try(!v.is_scribe_optimistic, false)
+      && try(split(".", v.version)[0] == "v2", false)
       && try(length(var.spectre_pairs) == 0 || contains(var.spectre_pairs, v.wat), false)
     ]
     iterator = contract
@@ -3374,8 +3375,8 @@ spectre {
       for v in var.contracts : v
       if v.env == var.environment
       && v.chain == var.chain_name
-      && try(split(".", v.version)[0] == "v2", false)
       && try(v.is_scribe, false) && try(v.is_scribe_optimistic, false)
+      && try(split(".", v.version)[0] == "v2", false)
       && try(length(var.spectre_pairs) == 0 || contains(var.spectre_pairs, v.wat), false)
     ]
     iterator = contract
@@ -3502,7 +3503,18 @@ transport {
   }
 }
 variables {
-  musig_pairs = explode(var.item_separator, env("CFG_MODELS", env("CFG_MUSIG_PAIRS", "")))
+  musig_pairs  = explode(var.item_separator, env("CFG_MODELS", env("CFG_MUSIG_PAIRS", "")))
+  musig_watbar = distinct([
+    for v in var.contracts : {
+      wat = v.wat
+      bar = try(v.bar, 13)
+    } if v.env == var.environment
+    && try(v.is_scribe, false)
+    && try(split(".", v.version)[0] == "v2", false)
+    && try(length(var.musig_pairs) == 0 || contains(var.musig_pairs, v.wat), false)
+  ])
+  musig_wat_registry  = env("CFG_MUSIG_WAT_REGISTRY", try(var.contract_map["${var.environment}-${var.chain_name}-WatRegistry"], ""))
+  musig_feed_registry = env("CFG_MUSIG_FEED_REGISTRY", try(var.contract_map["${var.environment}-${var.chain_name}-FeedRegistry"], ""))
 }
 
 info {
@@ -3512,23 +3524,27 @@ info {
 musig {
   ethereum_key = "default"
 
-  dynamic "tick" {
-    for_each = [
-      for v in var.models : v
-      if try(length(var.musig_pairs) == 0 || contains(var.musig_pairs, v), false)
-    ]
-    iterator = contract
-    labels   = [contract.value]
+  dynamic "registry" {
+    for_each = var.musig_wat_registry != "" ? [1] : []
     content {
-      ethereum_client = "default"
+      ethereum_client        = "default"
+      wat_registry_addr      = var.musig_wat_registry
+      feed_registry_addr     = var.musig_feed_registry
+      interval               = tonumber(env("CFG_MUSIG_INTERVAL", "600"))
+      max_age                = tonumber(env("CFG_MUSIG_MAX_AGE", "3600"))
+      registry_sync_interval = tonumber(env("CFG_MUSIG_REGISTRY_SYNC_INTERVAL", "600"))
+    }
+  }
 
-      chainlog_contract_addr     = env("CFG_MUSIG_CHAINLOG", var.contract_map["${var.environment}-${var.chain_name}-Chainlog"])
-      wat_registry_contract_addr = env("CFG_MUSIG_WAT_REGISTRY", var.contract_map["${var.environment}-${var.chain_name}-WatRegistry"])
-
+  dynamic "tick" {
+    for_each = var.musig_watbar
+    iterator = contract
+    labels   = [contract.value.wat]
+    content {
+      quorum   = contract.value.bar
+      feeds    = var.feeds
       interval = tonumber(env("CFG_MUSIG_INTERVAL", "600"))
       max_age  = tonumber(env("CFG_MUSIG_MAX_AGE", "3600"))
-
-      optimistic = true
     }
   }
 }

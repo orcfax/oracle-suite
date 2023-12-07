@@ -35,7 +35,7 @@ __relays="$(jq -c '.' "config/relays.json")"
 __relays_initial="$(jq -c '.' "config/relays-initial.json")"
 
 _CONTRACT_MAP="$({
-	findAllConfigs "$1/deployments" '^(WatRegistry|Chainlog)$'
+	findAllConfigs "$1/deployments" '^(WatRegistry|Chainlog|FeedRegistry)$'
 	findAllConfigs "$1/deployments" '^TorAddressRegister_Feeds' 'name'
 } | jq -c '{(.environment+"-"+.chain+"-"+.contract):.address}' | sort | jq -s 'add')"
 
