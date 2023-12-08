@@ -1,7 +1,3 @@
-# Some popular IDEs
-.vscode
-.idea
-
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -9,27 +5,24 @@
 *.so
 *.dylib
 
-# Dependency directories
-vendor/
-
-# Compiled binaries
-/bin/*
-/dist/
-
 # Test binary, built with `go test -c`
 *.test
 
 # Output of the go coverage tool
 *.out
 
+# Go workspace file
+go.work
+
+# Compiled binaries
+/bin/*
+/dist/
+
+# Environment variables
+.env
+
 # Temporary and local files
 .tmp
 .DS_Store
 node_modules/
 /package*.json
-
-# Go Workspaces
-go.work
-
-# Environment variables
-.env
