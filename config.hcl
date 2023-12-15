@@ -7,7 +7,7 @@ contract_map = {
   "stage-sep-Chainlog": "0xfc71a2e4497d065416A1BBDA103330a381F8D3b1",
   "stage-sep-FeedRegistry": "0xcBFdA8453e751a35591489A30b4c4b6B44cb2847",
   "stage-sep-TorAddressRegister": "0x504Fdbc4a9386c2C48A5775a6967beB00dAa9E9a",
-  "stage-sep-WatRegistry": "0xE5f12C7285518bA5C6eEc15b00855A47C19d9557"
+  "stage-sep-WatRegistry": "0x733A71fF72DF71D8F26A957Ad6CF6AD030f7c553"
 }
 contracts = [
   {
