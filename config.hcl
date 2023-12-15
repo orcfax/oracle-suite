@@ -3,7 +3,7 @@ contract_map = {
   "prod-eth-Chainlog": "0xE10e8f60584e2A2202864d5B35A098EA84761256",
   "prod-eth-FeedRegistry": "0xb0b07B9280edfd1547221D590147B04b2589565a",
   "prod-eth-TorAddressRegister": "0x16515EEe550Fe7ae3b8f70bdfb737a57811B3C96",
-  "prod-eth-WatRegistry": "0x594d52fDB6570F07879Bb2AF8a36c3bF00BC7F00",
+  "prod-eth-WatRegistry": "0x31964fBe3AF555D3ead024e461AA5767c373Af75",
   "stage-sep-Chainlog": "0xfc71a2e4497d065416A1BBDA103330a381F8D3b1",
   "stage-sep-FeedRegistry": "0xcBFdA8453e751a35591489A30b4c4b6B44cb2847",
   "stage-sep-TorAddressRegister": "0x504Fdbc4a9386c2C48A5775a6967beB00dAa9E9a",
@@ -36,9 +36,9 @@ contracts = [
     "env": "prod",
     "chain": "eth",
     "wat": "BTC/USD",
-    "address": "0x9Af8fe1d0c9ED3f176Dd3559B6f4b6FeF3AAb83B",
+    "address": "0x24C392CDbF32Cf911B258981a66d5541d85269ce",
     "chain_id": 1,
-    "bar": 9,
+    "bar": 2,
     "is_scribe": true,
     "is_scribe_optimistic": true,
     "challenge_period": 1200,
@@ -50,8 +50,8 @@ contracts = [
       "spread": 1,
       "expiration": 43200
     },
-    "version": "v1.2.0",
-    "name": "Chronicle_BTC_USD_2"
+    "version": "v2.0.0",
+    "name": "Chronicle_BTC_USD_3"
   },
   {
     "env": "prod",
