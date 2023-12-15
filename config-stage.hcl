@@ -1,6 +1,7 @@
 variables {
 contract_map = {
   "prod-eth-Chainlog": "0xE10e8f60584e2A2202864d5B35A098EA84761256",
+  "prod-eth-FeedRegistry": "0xb0b07B9280edfd1547221D590147B04b2589565a",
   "prod-eth-TorAddressRegister": "0x16515EEe550Fe7ae3b8f70bdfb737a57811B3C96",
   "prod-eth-WatRegistry": "0x594d52fDB6570F07879Bb2AF8a36c3bF00BC7F00",
   "stage-sep-Chainlog": "0xfc71a2e4497d065416A1BBDA103330a381F8D3b1",
@@ -2350,9 +2351,9 @@ variables {
 
   # RPC URLs for specific blockchain clients. Gofer is chain type aware.
   # See: config-gofer.hcl: origin.<name>.contracts.<client>
-  eth_rpc_urls = explode(var.item_separator, env("CFG_ETH_RPC_URLS", "https://eth.public-rpc.com"))
-  arb_rpc_urls = explode(var.item_separator, env("CFG_ARB_RPC_URLS", ""))
-  opt_rpc_urls = explode(var.item_separator, env("CFG_OPT_RPC_URLS", ""))
+  eth_rpc_urls = explode(var.item_separator, env("CFG_ETH_CHAIN_RPC_URLS", env("CFG_ETH_RPC_URLS", "https://eth.public-rpc.com")))
+  arb_rpc_urls = explode(var.item_separator, env("CFG_ARB_CHAIN_RPC_URLS", env("CFG_ARB_RPC_URLS", "")))
+  opt_rpc_urls = explode(var.item_separator, env("CFG_OPT_CHAIN_RPC_URLS", env("CFG_OPT_RPC_URLS", "")))
 }
 
 ethereum {
@@ -2523,7 +2524,7 @@ gofer {
   origin "hitbtc" {
     type = "tick_generic_jq"
     url  = "https://api.hitbtc.com/api/2/public/ticker?symbols=$${ucbase}$${ucquote}"
-    jq   = "{price: .[0].last|tonumber, time: .[0].timestamp|strptime(\"%Y-%m-%dT%H:%M:%S.%jZ\")|mktime, volume: .[0].volumeQuote|tonumber}"
+    jq   = "{price: .[0].last|tonumber, time: .[0].timestamp|strptime(\"%Y-%m-%dT%H:%M:%S.%fZ\")|mktime, volume: .[0].volumeQuote|tonumber}"
   }
 
   origin "huobi" {
@@ -3304,6 +3305,52 @@ gofer {
   }
 }
 
+variables {
+  musig_pairs  = explode(var.item_separator, env("CFG_MODELS", env("CFG_MUSIG_PAIRS", "")))
+  musig_watbar = distinct([
+    for v in var.contracts : {
+      wat = v.wat
+      bar = try(v.bar, 13)
+    } if v.env == var.environment
+    && try(v.is_scribe, false)
+    && try(split(".", v.version)[0] == "v2", false)
+    && try(length(var.musig_pairs) == 0 || contains(var.musig_pairs, v.wat), false)
+  ])
+  musig_wat_registry  = env("CFG_MUSIG_WAT_REGISTRY", try(var.contract_map["${var.environment}-${var.chain_name}-WatRegistry"], ""))
+  musig_feed_registry = env("CFG_MUSIG_FEED_REGISTRY", try(var.contract_map["${var.environment}-${var.chain_name}-FeedRegistry"], ""))
+}
+
+info {
+  web_url = env("CFG_WEB_URL", "")
+}
+
+musig {
+  ethereum_key = "default"
+
+  dynamic "registry" {
+    for_each = var.musig_wat_registry != "" ? [1] : []
+    content {
+      ethereum_client        = "default"
+      wat_registry_addr      = var.musig_wat_registry
+      feed_registry_addr     = var.musig_feed_registry
+      interval               = tonumber(env("CFG_MUSIG_INTERVAL", "600"))
+      max_age                = tonumber(env("CFG_MUSIG_MAX_AGE", "3600"))
+      registry_sync_interval = tonumber(env("CFG_MUSIG_REGISTRY_SYNC_INTERVAL", "600"))
+    }
+  }
+
+  dynamic "tick" {
+    for_each = var.musig_watbar
+    iterator = contract
+    labels   = [contract.value.wat]
+    content {
+      quorum   = contract.value.bar
+      feeds    = var.feeds
+      interval = tonumber(env("CFG_MUSIG_INTERVAL", "600"))
+      max_age  = tonumber(env("CFG_MUSIG_MAX_AGE", "3600"))
+    }
+  }
+}
 variables {
   spectre_pairs = explode(var.item_separator, env("CFG_MODELS", env("CFG_SPECTRE_PAIRS", "")))
 }
