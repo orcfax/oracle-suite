@@ -16,7 +16,7 @@ require (
 	github.com/libp2p/go-libp2p-kad-dht v0.25.1
 	github.com/libp2p/go-libp2p-pubsub v0.9.3
 	github.com/multiformats/go-multiaddr v0.11.0
-	github.com/orcfax/node-id v0.0.0-20231218170525-7c1d6fa7a241
+	github.com/orcfax/node-id v0.0.0-20231219125431-3bbcb529e169
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
