@@ -73,6 +73,11 @@ type configOriginComposableBalancerV2 struct {
 	Contracts configContracts `hcl:"contracts,block"`
 }
 
+type configOriginWeightedBalancerV2 struct {
+	// `addresses` are the pool addresses of WeightedPool, `references` are not used
+	Contracts configContracts `hcl:"contracts,block"`
+}
+
 type configCurveContracts struct {
 	EthereumClient string `hcl:"client,label"`
 	// `addresses` are the pool addresses that are using `int256` (stableswap)
@@ -138,6 +143,8 @@ func (c *configOrigin) PostDecodeBlock(
 		config = &configOriginBalancerV2{}
 	case "composable_balancerV2":
 		config = &configOriginComposableBalancerV2{}
+	case "weighted_balancerV2":
+		config = &configOriginWeightedBalancerV2{}
 	case "curve":
 		config = &configOriginCurve{}
 	case "dsr":
@@ -226,6 +233,23 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 				Severity: hcl.DiagError,
 				Summary:  "Runtime error",
 				Detail:   fmt.Sprintf("Failed to create composable balancer origin: %s", err),
+				Subject:  c.Range.Ptr(),
+			}
+		}
+		return origin, nil
+	case *configOriginWeightedBalancerV2:
+		origin, err := origin.NewWeightedBalancerV2(origin.WeightedBalancerV2Config{
+
+			Client:            d.Clients[o.Contracts.EthereumClient],
+			ContractAddresses: o.Contracts.ContractAddresses,
+			Blocks:            averageFromBlocks,
+			Logger:            d.Logger,
+		})
+		if err != nil {
+			return nil, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Runtime error",
+				Detail:   fmt.Sprintf("Failed to create weighted balancer origin: %s", err),
 				Subject:  c.Range.Ptr(),
 			}
 		}

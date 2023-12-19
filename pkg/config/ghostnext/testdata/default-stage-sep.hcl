@@ -28,6 +28,15 @@ gofer {
       }
     }
   }
+  origin "weightedBalancerV2" {
+    type = "weighted_balancerV2"
+
+    contracts "ethereum" {
+      addresses = {
+        "WUSDM/WSTETH" = "0x54ca50ee86616379420cc56718e12566aa75abbe"
+      }
+    }
+  }
   origin "binance" {
     type = "tick_generic_jq"
     url  = "https://api.binance.com/api/v3/ticker/24hr"
@@ -83,7 +92,7 @@ gofer {
   origin "hitbtc" {
     type = "tick_generic_jq"
     url  = "https://api.hitbtc.com/api/2/public/ticker?symbols=$${ucbase}$${ucquote}"
-    jq   = "{price: .[0].last|tonumber, time: .[0].timestamp|strptime(\"%Y-%m-%dT%H:%M:%S.%jZ\")|mktime, volume: .[0].volumeQuote|tonumber}"
+    jq   = "{price: .[0].last|tonumber, time: .[0].timestamp|strptime(\"%Y-%m-%dT%H:%M:%S.%fZ\")|mktime, volume: .[0].volumeQuote|tonumber}"
   }
   origin "huobi" {
     type = "tick_generic_jq"

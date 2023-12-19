@@ -5,15 +5,16 @@ import "github.com/defiweb/go-eth/abi"
 // [Balancer V2]
 var getLatest = abi.MustParseMethod("getLatest(uint8)(uint256)")
 var getPriceRateCache = abi.MustParseMethod("getPriceRateCache(address)(uint256,uint256,uint256)")
-
-// [Balancer V2 - ComposableStablePool]
 var getPoolID = abi.MustParseMethod("getPoolId()(bytes32)")
 var getVault = abi.MustParseMethod("getVault()(address)")
 var getPoolTokens = abi.MustParseMethod("getPoolTokens(bytes32)(address[] memory tokens,uint256[] memory balances,uint256 lastChangeBlock)")
 var getSwapFeePercentage = abi.MustParseMethod("getSwapFeePercentage()(uint256)")
-var getBptIndex = abi.MustParseMethod("getBptIndex()(uint256)")
-var getAmplificationParameter = abi.MustParseMethod("getAmplificationParameter()(uint256 value,bool isUpdating,uint256 precision)")
 var getScalingFactors = abi.MustParseMethod("getScalingFactors()(uint256[] memory)")
+var getNormalizedWeights = abi.MustParseMethod("getNormalizedWeights()(uint256[] memory)")
+var getBptIndex = abi.MustParseMethod("getBptIndex()(uint256)")
+
+// [Balancer V2 - ComposableStablePool]
+var getAmplificationParameter = abi.MustParseMethod("getAmplificationParameter()(uint256 value,bool isUpdating,uint256 precision)")
 var getLastJoinExitData = abi.MustParseMethod("getLastJoinExitData()(uint256 lastJoinExitAmplification,uint256 lastPostJoinExitInvariant)")
 var getTotalSupply = abi.MustParseMethod("totalSupply()(uint256)")
 var getRateProviders = abi.MustParseMethod("getRateProviders()(address[] memory)")
