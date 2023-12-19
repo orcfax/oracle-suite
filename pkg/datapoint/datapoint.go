@@ -241,6 +241,43 @@ func (p Point) MarshalTrace() ([]byte, error) {
 	}, []any{p}, 0), nil
 }
 
+// save a node identity to disk.
+func saveIdentityToDisk(nodeIdentityLocation string, nodeIdentity identity.Identity) {
+	val, _ := json.MarshalIndent(nodeIdentity, "", "   ")
+	lg.Printf("outputting nodeIdentity to: '%s'", nodeIdentityLocation)
+	_ = os.WriteFile(nodeIdentityLocation, val, 0644)
+}
+
+// readAndAttachIdentity will read the local node-id file and attach it
+// to the collected record. If the identity hasn't been created yet then
+// it is created for reuse later on.
+func readAndAttachIdentity() identity.Identity {
+	const nodeIdentityLocation = "/tmp/.node-identity.json"
+
+	// Load the identity to enable it to be updated.
+	ident, err := identity.LoadCache(nodeIdentityLocation)
+	if err != nil {
+		// In future implementations we need the handshake to
+		// determine whether or not a new identity can just be
+		// created.
+		lg.Printf("error loading existing identity: '%s' cannot retrieve previous data", err)
+	}
+
+	if (ident == identity.Identity{}) {
+		lg.Printf("creating a new id: %s", nodeIdentityLocation)
+	} else {
+		lg.Printf("retrieved id: '%s'", ident.NodeID)
+		lg.Printf("first initialized: '%s'", ident.InitializationDate)
+	}
+
+	// Additional parts of the identity may have changed, e.g. node
+	// location so we update these here via IPInfo.
+	nodeIdentity := identity.GetIdentity(ident.NodeID, ident.InitializationDate, "")
+	saveIdentityToDisk(nodeIdentityLocation, nodeIdentity)
+
+	return nodeIdentity
+}
+
 // createContentSignature provides a rudimentary way to create a
 // checksum to validate a collector's message against. The message
 // helps to prove the origin of a message and helps to protect against
@@ -385,34 +422,8 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	msg := value.OrcfaxMessage{}
 	msg.Message = collectorData
 
-	const idLoc = "/tmp/.node-identity.json"
-
-	// Load the identity to enable it to be updated.
-	ident, err := identity.LoadCache(idLoc)
-	if err != nil {
-		// In future implementations we need the handshake to
-		// determine whether or not a new identity can just be
-		// created.
-		lg.Printf("error loading existing identity: '%s' cannot retrieve previous data", err)
-	}
-
-	if (ident == identity.Identity{}) {
-		lg.Printf("creating a new id: %s", idLoc)
-	} else {
-		lg.Printf("retrieved id: '%s'", ident.NodeID)
-		lg.Printf("first initialized: '%s'", ident.InitializationDate)
-	}
-
-	// get default loc for id
-	// do something with the websocket...
-	websocket := "ws://"
-
-	loc := identity.GetIdentity(ident.NodeID, ident.InitializationDate, websocket)
-	msg.Message.Identity = loc
-	val, _ := json.MarshalIndent(loc, "", "   ")
-	lg.Println(string(val))
-	lg.Printf("outputting to: '%s'", idLoc)
-	_ = os.WriteFile(idLoc, val, 0644)
+	nodeIdentity := readAndAttachIdentity()
+	msg.Message.Identity = nodeIdentity
 
 	return msg, nil
 }
