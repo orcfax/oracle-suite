@@ -20,13 +20,16 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 
 	lg "log"
 
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/internal/identity"
+	"github.com/orcfax/node-id/pkg/identity"
+
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
 	"github.com/chronicleprotocol/oracle-suite/pkg/log"
 	"github.com/chronicleprotocol/oracle-suite/pkg/util/treerender"
@@ -276,6 +279,13 @@ func priceToString(price value.Tick) (string, error) {
 	return "", fmt.Errorf("price is nil and cannot be converted")
 }
 
+// makeError creates a map representing an error.
+func makeError(collector string, message string) map[string]string {
+	m := make(map[string]string)
+	m[collector] = message
+	return m
+}
+
 // MarshalOrcfax returns an Orcfax validator collector profile,
 func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
@@ -285,7 +295,8 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 		lg.Printf("to handle, errors if not enough data, e.g. TUSD/USD %s", p.Error)
 		collectorData := value.OrcfaxCollectorData{}
 		msg := value.OrcfaxMessage{}
-		collectorData.Errors = append(collectorData.Errors, fmt.Sprintf("%s", p.Error))
+		m := makeError("ALL", fmt.Sprintf("%s", p.Error))
+		collectorData.Errors = append(collectorData.Errors, m)
 		msg.Message = collectorData
 		return msg, nil
 	}
@@ -309,12 +320,13 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			if !ok {
 				collectorData.Errors = append(
 					collectorData.Errors,
-					fmt.Sprintf(
-						"%s: (%s) error with type casting tick",
+					makeError(fmt.Sprintf(
+						"%s",
 						feedPair,
+					), fmt.Sprintf(
+						"%s: error with type casting header",
 						origin,
-					),
-				)
+					)))
 				// continue onto the next collector.
 				continue
 			}
@@ -322,12 +334,10 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			if err != nil {
 				collectorData.Errors = append(
 					collectorData.Errors,
-					fmt.Sprintf("%s: (%s) %s",
-						feedPair,
-						origin,
-						err,
-					),
-				)
+					makeError(
+						fmt.Sprintf("%s", feedPair),
+						fmt.Sprintf("%s: %s", origin, err),
+					))
 				// continue onto the next collector.
 				continue
 			}
@@ -335,11 +345,13 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			if !ok {
 				collectorData.Errors = append(
 					collectorData.Errors,
-					fmt.Sprintf(
-						"%s: ('%s') error with type casting header",
+					makeError(fmt.Sprintf(
+						"%s",
 						feedPair,
+					), fmt.Sprintf(
+						"%s: error with type casting header",
 						origin,
-					),
+					)),
 				)
 				// continue onto the next collector.
 				continue
@@ -357,6 +369,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
 	collectorData.DataPoints = dataPoints
 	collectorData.Raw = rawData
+	collectorData.Feed = strings.Replace(fmt.Sprintf("%s", feedPair), "/", "-", 1)
 	collectorData.ContentSignature = createContentSignature(
 		collectorData.Timestamp,
 		collectorData.DataPoints,
@@ -366,7 +379,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	// NB. This is the Chronicle Labs concept of validation. We need to
 	// verify this and also augment it with ours.
 	if err := p.Validate(); err != nil {
-		collectorData.Errors = append(collectorData.Errors, err.Error())
+		collectorData.Errors = append(collectorData.Errors, (makeError("ALL", err.Error())))
 	}
 
 	msg := value.OrcfaxMessage{}
@@ -384,17 +397,22 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	}
 
 	if (ident == identity.Identity{}) {
-		lg.Printf("creating a new id")
+		lg.Printf("creating a new id: %s", idLoc)
 	} else {
 		lg.Printf("retrieved id: '%s'", ident.NodeID)
+		lg.Printf("first initialized: '%s'", ident.InitializationDate)
 	}
 
 	// get default loc for id
 	// do something with the websocket...
 	websocket := "ws://"
 
-	loc := identity.GetIdentity(ident.NodeID, websocket)
+	loc := identity.GetIdentity(ident.NodeID, ident.InitializationDate, websocket)
 	msg.Message.Identity = loc
+	val, _ := json.MarshalIndent(loc, "", "   ")
+	lg.Println(string(val))
+	lg.Printf("outputting to: '%s'", idLoc)
+	_ = os.WriteFile(idLoc, val, 0644)
 
 	return msg, nil
 }

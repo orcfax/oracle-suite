@@ -403,6 +403,12 @@ github.com/opencontainers/runtime-spec v1.1.0/go.mod h1:jwyrGlmzljRJv/Fgzds9SsS/
 github.com/opentracing/opentracing-go v1.2.0 h1:uEJPy/1a5RIPAJ0Ov+OIO8OxWu77jEv+1B0VhjKrZUs=
 github.com/opentracing/opentracing-go v1.2.0/go.mod h1:GxEUsuufX4nBwe+T+Wl9TAgYrxe9dPLANfrWvHYVTgc=
 github.com/openzipkin/zipkin-go v0.1.1/go.mod h1:NtoC/o8u3JlF1lSlyPNswIbeQH9bJTmOf0Erfk+hxe8=
+github.com/orcfax/node-id v0.0.0-20231218162742-7f2e62da62e6 h1:7JCcNaw7l1yIVCKvRPKdU55HzDE3M1W0vxujy4zZPfg=
+github.com/orcfax/node-id v0.0.0-20231218162742-7f2e62da62e6/go.mod h1:GC6gsOwCPPdnzkounI8Du10aMJ1hksmo5YA5J16ukxE=
+github.com/orcfax/node-id v0.0.0-20231218170245-22c821fc6ae2 h1:kALDQuOpVgTpbifRmMLtDWrNfOTmY6tfrCSl5PJl4Eg=
+github.com/orcfax/node-id v0.0.0-20231218170245-22c821fc6ae2/go.mod h1:GC6gsOwCPPdnzkounI8Du10aMJ1hksmo5YA5J16ukxE=
+github.com/orcfax/node-id v0.0.0-20231218170525-7c1d6fa7a241 h1:L1g/evVasAhbRpwm8caPtNWNFDTuVH4XAKPWmuRL7j0=
+github.com/orcfax/node-id v0.0.0-20231218170525-7c1d6fa7a241/go.mod h1:GC6gsOwCPPdnzkounI8Du10aMJ1hksmo5YA5J16ukxE=
 github.com/patrickmn/go-cache v2.1.0+incompatible h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=
 github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
 github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 h1:onHthvaw9LFnH4t2DcNVpwGmV9E1BkGknEliJkfwQj0=
