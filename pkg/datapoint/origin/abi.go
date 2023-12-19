@@ -6,6 +6,21 @@ import "github.com/defiweb/go-eth/abi"
 var getLatest = abi.MustParseMethod("getLatest(uint8)(uint256)")
 var getPriceRateCache = abi.MustParseMethod("getPriceRateCache(address)(uint256,uint256,uint256)")
 
+// [Balancer V2 - ComposableStablePool]
+var getPoolID = abi.MustParseMethod("getPoolId()(bytes32)")
+var getVault = abi.MustParseMethod("getVault()(address)")
+var getPoolTokens = abi.MustParseMethod("getPoolTokens(bytes32)(address[] memory tokens,uint256[] memory balances,uint256 lastChangeBlock)")
+var getSwapFeePercentage = abi.MustParseMethod("getSwapFeePercentage()(uint256)")
+var getBptIndex = abi.MustParseMethod("getBptIndex()(uint256)")
+var getAmplificationParameter = abi.MustParseMethod("getAmplificationParameter()(uint256 value,bool isUpdating,uint256 precision)")
+var getScalingFactors = abi.MustParseMethod("getScalingFactors()(uint256[] memory)")
+var getLastJoinExitData = abi.MustParseMethod("getLastJoinExitData()(uint256 lastJoinExitAmplification,uint256 lastPostJoinExitInvariant)")
+var getTotalSupply = abi.MustParseMethod("totalSupply()(uint256)")
+var getRateProviders = abi.MustParseMethod("getRateProviders()(address[] memory)")
+var getProtocolFeePercentageCache = abi.MustParseMethod("getProtocolFeePercentageCache(uint256)(uint256)")
+var isTokenExemptFromYieldProtocolFee = abi.MustParseMethod("isTokenExemptFromYieldProtocolFee(address)(bool)")
+var getTokenRateCache = abi.MustParseMethod("getTokenRateCache(address)(uint256 rate,uint256 oldRate,uint256 duration,uint256 expires)")
+
 // [Curve]
 // Since curve has `stableswap` pool and `cryptoswap` pool, and their smart contracts have pretty similar interface
 // `stableswap` pool is using `int128` in `get_dy`, `get_dx` ...,

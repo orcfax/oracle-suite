@@ -61,12 +61,16 @@ type configBalancerContracts struct {
 	ReferenceAddresses origin.ContractAddresses `hcl:"references,optional"`
 }
 
-type configOriginBalancer struct {
+type configOriginBalancerV2 struct {
 	// `addresses` are the pool addresses of WeightedPool2Tokens or MetaStablePool
 	// `references` are used if the pool is MetaStablePool, key of mapping is the same key to `addresses` and
 	// value should be the token0 address of pool.
 	// If the pool is WeightedPool2Tokens, `references` should not contain the reference key of that pool.
 	Contracts configBalancerContracts `hcl:"contracts,block"`
+}
+
+type configOriginComposableBalancerV2 struct {
+	Contracts configContracts `hcl:"contracts,block"`
 }
 
 type configCurveContracts struct {
@@ -131,7 +135,9 @@ func (c *configOrigin) PostDecodeBlock(
 	case "tick_generic_jq":
 		config = &configOriginTickGenericJQ{}
 	case "balancerV2":
-		config = &configOriginBalancer{}
+		config = &configOriginBalancerV2{}
+	case "composable_balancerV2":
+		config = &configOriginComposableBalancerV2{}
 	case "curve":
 		config = &configOriginCurve{}
 	case "dsr":
@@ -190,7 +196,7 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 			}
 		}
 		return origin, nil
-	case *configOriginBalancer:
+	case *configOriginBalancerV2:
 		origin, err := origin.NewBalancerV2(origin.BalancerV2Config{
 			Client:             d.Clients[o.Contracts.EthereumClient],
 			ContractAddresses:  o.Contracts.ContractAddresses,
@@ -203,6 +209,23 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 				Severity: hcl.DiagError,
 				Summary:  "Runtime error",
 				Detail:   fmt.Sprintf("Failed to create balancer origin: %s", err),
+				Subject:  c.Range.Ptr(),
+			}
+		}
+		return origin, nil
+
+	case *configOriginComposableBalancerV2:
+		origin, err := origin.NewComposableBalancerV2(origin.ComposableBalancerV2Config{
+			Client:            d.Clients[o.Contracts.EthereumClient],
+			ContractAddresses: o.Contracts.ContractAddresses,
+			Blocks:            averageFromBlocks,
+			Logger:            d.Logger,
+		})
+		if err != nil {
+			return nil, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Runtime error",
+				Detail:   fmt.Sprintf("Failed to create composable balancer origin: %s", err),
 				Subject:  c.Range.Ptr(),
 			}
 		}

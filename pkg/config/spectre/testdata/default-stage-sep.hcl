@@ -289,4 +289,3 @@ ethereum {
     chain_id     = 1
   }
 }
-
