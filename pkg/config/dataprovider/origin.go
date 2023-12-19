@@ -269,11 +269,11 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 		return origin, nil
 	case *configOriginCurve:
 		origin, err := origin.NewCurve(origin.CurveConfig{
-			Client: d.Clients[o.Contracts.EthereumClient],
+			Client:                      d.Clients[o.Contracts.EthereumClient],
 			StableSwapContractAddresses: o.Contracts.StableSwapContractAddresses,
 			CryptoSwapContractAddresses: o.Contracts.CryptoSwapContractAddresses,
-			Blocks: averageFromBlocks,
-			Logger: d.Logger,
+			Blocks:                      averageFromBlocks,
+			Logger:                      d.Logger,
 		})
 		if err != nil {
 			return nil, &hcl.Diagnostic{
