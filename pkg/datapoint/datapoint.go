@@ -357,10 +357,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			if !ok {
 				collectorData.Errors = append(
 					collectorData.Errors,
-					makeError(fmt.Sprintf(
-						"%s",
-						feedPair,
-					), fmt.Sprintf(
+					makeError(feedPair.String(), fmt.Sprintf(
 						"%s: error with type casting header",
 						origin,
 					)))
@@ -372,7 +369,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 				collectorData.Errors = append(
 					collectorData.Errors,
 					makeError(
-						fmt.Sprintf("%s", feedPair),
+						feedPair.String(),
 						fmt.Sprintf("%s: %s", origin, err),
 					))
 				// continue onto the next collector.
@@ -382,10 +379,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			if !ok {
 				collectorData.Errors = append(
 					collectorData.Errors,
-					makeError(fmt.Sprintf(
-						"%s",
-						feedPair,
-					), fmt.Sprintf(
+					makeError(feedPair.String(), fmt.Sprintf(
 						"%s: error with type casting header",
 						origin,
 					)),
@@ -406,7 +400,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
 	collectorData.DataPoints = dataPoints
 	collectorData.Raw = rawData
-	collectorData.Feed = strings.Replace(fmt.Sprintf("%s", feedPair), "/", "-", 1)
+	collectorData.Feed = strings.Replace(feedPair.String(), "/", "-", 1)
 	collectorData.ContentSignature = createContentSignature(
 		collectorData.Timestamp,
 		collectorData.DataPoints,
