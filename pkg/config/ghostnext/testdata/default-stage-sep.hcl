@@ -113,6 +113,15 @@ gofer {
     url  = "https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=$${ucbase}-$${ucquote}"
     jq   = "{price: .data.price, time: (.data.time/1000)|round, volume: null}"
   }
+  origin "lido_lst" {
+    type = "lido_lst"
+
+    contracts "ethereum" {
+      addresses = {
+        "STETH/ERC20" = "0xae7ab96520de3a18e5e111b5eaab095312d7fe84"
+      }
+    }
+  }
   origin "okx" {
     type = "tick_generic_jq"
     url  = "https://www.okx.com/api/v5/market/ticker?instId=$${ucbase}-$${ucquote}&instType=SPOT"
