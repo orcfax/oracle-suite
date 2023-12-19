@@ -1,4 +1,4 @@
-//  Copyright (C) 2021-2023 Chronicle Labs, Inc.
+//  Copyright (C) 2021-2023 Chronicle Labs, Inc. 2023 Orcfax Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Affero General Public License as
