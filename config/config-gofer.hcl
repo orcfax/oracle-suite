@@ -5,11 +5,9 @@ gofer {
       addresses = {
         "WETH/GNO"    = "0xF4C0DD9B82DA36C07605df83c8a416F11724d88b" # WeightedPool2Tokens
         "RETH/WETH"   = "0x1E19CF2D73a72Ef1332C882F20534B6519Be0276" # MetaStablePool
-        "WSTETH/WETH" = "0x32296969ef14eb0c6d29669c550d4a0449130230" # MetaStablePool
       }
       references = {
         "RETH/WETH"   = "0xae78736Cd615f374D3085123A210448E74Fc6393" # token0 of RETH/WETH
-        "WSTETH/WETH" = "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0" # token0 of WSTETH/WETH
       }
     }
   }
@@ -18,7 +16,8 @@ gofer {
     type = "composable_balancerV2"
     contracts "ethereum" {
       addresses = {
-        "GHO/LUSD" = "0x3FA8C89704e5d07565444009e5d9e624B40Be813" # ComposableStablePool(example, will update)
+        "GHO/LUSD"                    = "0x3FA8C89704e5d07565444009e5d9e624B40Be813"
+        "WSTETH/WSTETH_WETH_BPT/WETH" = "0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD"
       }
     }
   }
@@ -61,7 +60,6 @@ gofer {
     contracts "ethereum" {
       addresses = {
         # int256, stableswap
-        "RETH/WSTETH"   = "0x447Ddd4960d9fdBF6af9a790560d0AF76795CB08",
         "ETH/STETH"     = "0xDC24316b9AE028F1497c275EB9192a3Ea0f67022",
         "DAI/USDC/USDT" = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7",
         "FRAX/USDC"     = "0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2",
@@ -136,6 +134,16 @@ gofer {
     jq   = "{price: .data[0].last|tonumber, time: (.data[0].ts|tonumber/1000), volume: .data[0].vol24h|tonumber}"
   }
 
+  origin "pancakeswapV3" {
+    type = "uniswapV3"
+    contracts "ethereum" {
+      addresses = {
+        "WSTETH/WETH" = "0x3a1b97Fc25fA45832F588ED3bFb2A0f74ddBD4F8",
+        "RETH/WETH"   = "0x2201d2400d30BFD8172104B4ad046d019CA4E7bd"
+      }
+    }
+  }
+
   origin "rocketpool" {
     type = "rocketpool"
     contracts "ethereum" {
@@ -200,7 +208,8 @@ gofer {
         "ARB/WETH"    = "0x755E5A186F0469583bd2e80d1216E02aB88Ec6ca",
         "DAI/FRAX"    = "0x97e7d56A0408570bA1a7852De36350f7713906ec",
         "WSTETH/WETH" = "0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa",
-        "MATIC/WETH"  = "0x290A6a7460B308ee3F19023D2D00dE604bcf5B42"
+        "MATIC/WETH"  = "0x290A6a7460B308ee3F19023D2D00dE604bcf5B42",
+        "RETH/WETH"   = "0xa4e0faA58465A2D369aa21B3e42d43374c6F9613"
       }
     }
   }
@@ -605,9 +614,15 @@ gofer {
 
   data_model "RETH/ETH" {
     median {
-      min_values = 2
+      min_values = 3
+      alias "RETH/ETH" {
+        origin "uniswapV3" { query = "RETH/WETH" }
+      }
       alias "RETH/ETH" {
         origin "balancerV2" { query = "RETH/WETH" }
+      }
+      alias "RETH/ETH" {
+        origin "pancakeswapV3" { query = "RETH/WETH" }
       }
       alias "RETH/ETH" {
         origin "curve" { query = "RETH/WETH" }
@@ -804,11 +819,14 @@ gofer {
         origin "uniswapV3" { query = "WSTETH/WETH" }
       }
       alias "WSTETH/ETH" {
-        origin "balancerV2" { query = "WSTETH/WETH" }
+        origin "composableBalancerV2" { query = "WSTETH/WETH" }
       }
       indirect {
-        origin "curve" { query = "RETH/WSTETH" }
-        reference { data_model = "RETH/ETH" }
+        origin "wsteth" { query = "WSTETH/STETH" }
+        origin "curve" { query = "ETH/STETH" }
+      }
+      alias "WSTETH/ETH" {
+        origin "pancakeswapV3" { query = "WSTETH/WETH" }
       }
     }
   }
