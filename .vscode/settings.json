@@ -51,6 +51,7 @@
         "kucoin",
         "maputil",
         "Ogmios",
-        "upbit"
+        "upbit",
+        "Validatable"
     ]
 }
