@@ -220,11 +220,6 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	collectorData.DataPoints = dataPoints
 	collectorData.Raw = rawData
 	collectorData.Feed = strings.Replace(feedPair.String(), "/", "-", 1)
-	collectorData.ContentSignature = createContentSignature(
-		collectorData.Timestamp,
-		collectorData.DataPoints,
-		"todo-provide-a-node-identifier-here",
-	)
 
 	// NB. This is the Chronicle Labs concept of validation. We need to
 	// verify this and also augment it with ours.
@@ -233,12 +228,20 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	}
 
 	msg := value.OrcfaxMessage{}
-	msg.Message = collectorData
 
 	nodeIdentity := readAndAttachIdentity()
 	msg.Message.Identity = nodeIdentity
 
 	msg.NodeID = nodeIdentity.NodeID
+
+	collectorData.ContentSignature = createContentSignature(
+		collectorData.Timestamp,
+		collectorData.DataPoints,
+		nodeIdentity.NodeID,
+	)
+
+	msg.Message = collectorData
+
 	msg.ValidationTimestamp = time.Now().UTC().Format(utcTimeFormat)
 
 	return msg, nil
