@@ -230,18 +230,16 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	msg := value.OrcfaxMessage{}
 
 	nodeIdentity := readAndAttachIdentity()
-	msg.Message.Identity = nodeIdentity
-
-	msg.NodeID = nodeIdentity.NodeID
 
 	collectorData.ContentSignature = createContentSignature(
 		collectorData.Timestamp,
 		collectorData.DataPoints,
 		nodeIdentity.NodeID,
 	)
-
 	msg.Message = collectorData
+	msg.Message.Identity = nodeIdentity
 
+	msg.NodeID = nodeIdentity.NodeID
 	msg.ValidationTimestamp = time.Now().UTC().Format(utcTimeFormat)
 
 	return msg, nil
