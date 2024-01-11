@@ -9,7 +9,9 @@ import (
 
 // OrcfaxMessage wraps the Orcfax data structure.
 type OrcfaxMessage struct {
-	Message OrcfaxCollectorData `json:"message"`
+	Message             OrcfaxCollectorData `json:"message"`
+	NodeID              string              `json:"node_id"`
+	ValidationTimestamp string              `json:"validation_timestamp"`
 }
 
 // OrcfaxCollectorData is the primary payload for an Orcfax message

@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -138,6 +139,33 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
 	lg.Println("nb. ADA/BTC requires further testing, e.g. for expired data points")
 
+	var ver string
+	var com string
+
+	// main.version=0.23.1-SNAPSHOT-e2471f6
+	// main.commit=e2471f6b706a095141bbe4009ea5eab2362cfdcc
+	// main.date=2023-12-29T15:04:14Z
+	// main.builtBy=goreleaser
+
+	x, _ := debug.ReadBuildInfo()
+	for _, v := range x.Settings {
+		if v.Key == "-ldflags" {
+			g := strings.Split(v.Value, "-X")
+			for _, v2 := range g {
+				if strings.Contains(v2, "main.version") {
+					ver = strings.TrimSpace(strings.Split(v2, "=")[1])
+				}
+				if strings.Contains(v2, "main.commit") {
+					com = strings.TrimSpace(strings.Split(v2, "=")[1])
+				}
+				if strings.Contains(v2, "main.date") {
+					//dat = strings.Split(v2, "=")[1]
+				}
+			}
+
+		}
+	}
+
 	for _, t := range p.SubPoints {
 		for _, tt := range t.SubPoints {
 			origin := tt.Meta["origin"]
@@ -178,7 +206,9 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			}
 			// continue to add to the raw data output.
 			raw := value.OrcfaxRaw{}
-			raw.Collector = fmt.Sprintf("%s.%s", origin, collector)
+
+			raw.Collector = fmt.Sprintf("%s.%s.%s.%s", origin, collector, ver, com)
+
 			raw.Response = val
 			raw.RequestURL = tt.Meta["request_url"].(string)
 			raw.RequestTimestamp = tt.Time.UTC().Format(utcTimeFormat)
@@ -207,6 +237,9 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
 	nodeIdentity := readAndAttachIdentity()
 	msg.Message.Identity = nodeIdentity
+
+	msg.NodeID = nodeIdentity.NodeID
+	msg.ValidationTimestamp = time.Now().UTC().Format(utcTimeFormat)
 
 	return msg, nil
 }
