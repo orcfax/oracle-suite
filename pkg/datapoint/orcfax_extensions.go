@@ -60,12 +60,7 @@ func readAndAttachIdentity() identity.Identity {
 		lg.Printf("first initialized: '%s'", ident.InitializationDate)
 	}
 
-	// Additional parts of the identity may have changed, e.g. node
-	// location so we update these here via IPInfo.
-	nodeIdentity := identity.GetIdentity(ident.NodeID, ident.InitializationDate, "")
-	saveIdentityToDisk(nodeIdentityLocation, nodeIdentity)
-
-	return nodeIdentity
+	return ident
 }
 
 // createContentSignature provides a rudimentary way to create a
