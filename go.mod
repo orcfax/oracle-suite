@@ -16,7 +16,6 @@ require (
 	github.com/libp2p/go-libp2p-kad-dht v0.25.1
 	github.com/libp2p/go-libp2p-pubsub v0.9.3
 	github.com/multiformats/go-multiaddr v0.11.0
-	github.com/orcfax/node-id v0.0.0-20231219125431-3bbcb529e169
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
@@ -118,6 +117,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.11.0 // indirect
 	github.com/opencontainers/runtime-spec v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
+	github.com/orcfax/node-id v0.0.0-20240111102858-62b32b2bbcd9 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
