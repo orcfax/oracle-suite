@@ -122,26 +122,30 @@ func splitBuildProp(property string) string {
 //
 //
 func readBuildProperties() value.BuildProperties {
-	bp := value.BuildProperties{}
-	x, _ := debug.ReadBuildInfo()
-	for _, settings := range x.Settings {
+	buildProps, _ := debug.ReadBuildInfo()
+	return parseBuildProperties(buildProps.Settings)
+}
+
+func parseBuildProperties(buildProperties []debug.BuildSetting) value.BuildProperties {
+	buildProps := value.BuildProperties{}
+	for _, settings := range buildProperties {
 		if settings.Key != "-ldflags" {
 			continue
 		}
 		setting := strings.Split(settings.Value, "-X")
 		for _, property := range setting {
 			if strings.Contains(property, "main.version") {
-				bp.Version = splitBuildProp(property)
+				buildProps.Version = splitBuildProp(property)
 			}
 			if strings.Contains(property, "main.commit") {
-				bp.Commit = splitBuildProp(property)
+				buildProps.Commit = splitBuildProp(property)
 			}
 			if strings.Contains(property, "main.date") {
-				bp.Date = splitBuildProp(property)
+				buildProps.Date = splitBuildProp(property)
 			}
 		}
 	}
-	return bp
+	return buildProps
 }
 
 // generateMessageObject provides a helper function to generate the
