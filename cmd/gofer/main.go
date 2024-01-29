@@ -31,6 +31,9 @@ var (
 	date    = "1970-01-01T00:00:01Z"
 )
 
+const appname = "orcfax-chronicle-collector"
+const timeFormat = "2006-01-02 15:04:05"
+
 var agent string = fmt.Sprintf("oracle-suite/%s", version)
 
 func versionFunc() *cobra.Command {

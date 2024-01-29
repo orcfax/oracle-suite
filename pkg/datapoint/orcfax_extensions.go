@@ -132,10 +132,8 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	var dataPoints []string
 	var rawData []value.OrcfaxRaw
 
-	lg.Println("nb. ADA/BTC requires further testing, e.g. for expired data points")
-
-	var ver string
-	var com string
+	var codeVersion string
+	var codeCommit string
 
 	// main.version=0.23.1-SNAPSHOT-e2471f6
 	// main.commit=e2471f6b706a095141bbe4009ea5eab2362cfdcc
@@ -148,12 +146,13 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			g := strings.Split(v.Value, "-X")
 			for _, v2 := range g {
 				if strings.Contains(v2, "main.version") {
-					ver = strings.TrimSpace(strings.Split(v2, "=")[1])
+					codeVersion = strings.TrimSpace(strings.Split(v2, "=")[1])
 				}
 				if strings.Contains(v2, "main.commit") {
-					com = strings.TrimSpace(strings.Split(v2, "=")[1])
+					codeCommit = strings.TrimSpace(strings.Split(v2, "=")[1])
 				}
 				if strings.Contains(v2, "main.date") {
+					lg.Println("XXXXX %s", v2)
 					//dat = strings.Split(v2, "=")[1]
 				}
 			}
@@ -202,7 +201,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			// continue to add to the raw data output.
 			raw := value.OrcfaxRaw{}
 
-			raw.Collector = fmt.Sprintf("%s.%s.%s.%s", origin, collector, ver, com)
+			raw.Collector = fmt.Sprintf("%s.%s.%s.%s", origin, collector, codeVersion, codeCommit)
 
 			raw.Response = val
 			raw.RequestURL = tt.Meta["request_url"].(string)
