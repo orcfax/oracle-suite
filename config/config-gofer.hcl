@@ -244,7 +244,7 @@ gofer {
   // point for new data models as it tries to retrieve from all.
   data_model "TUSD/USD" {
     median {
-      min_values = 1
+      min_values = 3
       origin "binance" { query = "TUSD/USD" }
       origin "bitstamp" { query = "TUSD/USD" }
       origin "bitfinex_simple" { query = "TUSD/USD" }
@@ -263,7 +263,7 @@ gofer {
   // WMT is in the same boat.
   data_model "WMT/USD" {
     median {
-      min_values = 1
+      min_values = 3
       origin "binance" { query = "WMT/USD" }
       origin "bitstamp" { query = "WMT/USD" }
       origin "bitfinex_simple" { query = "WMT/USD" }

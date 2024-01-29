@@ -17,9 +17,7 @@ package datapoint
 
 import (
 	"crypto/sha256"
-	"encoding/json"
 	"fmt"
-	"os"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -31,12 +29,7 @@ import (
 	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
 )
 
-// save a node identity to disk.
-func saveIdentityToDisk(nodeIdentityLocation string, nodeIdentity identity.Identity) {
-	val, _ := json.MarshalIndent(nodeIdentity, "", "   ")
-	lg.Printf("outputting nodeIdentity to: '%s'", nodeIdentityLocation)
-	_ = os.WriteFile(nodeIdentityLocation, val, 0644)
-}
+const utcTimeFormat = "2006-01-02T15:04:05Z"
 
 // readAndAttachIdentity will read the local node-id file and attach it
 // to the collected record. If the identity hasn't been created yet then
@@ -70,16 +63,16 @@ func readAndAttachIdentity() identity.Identity {
 func createContentSignature(timestamp string, values []string, nodeID string) string {
 	/* Reference impl:
 
-	```golang
-		hash := sha256.New()
-		hash.Write([]byte("2023-09-12T14:08:15Z"))
-		hash.Write([]byte("0.248848"))
-		hash.Write([]byte("0.2489"))
-		hash.Write([]byte("0.2488563207"))
-		hash.Write([]byte("9165f28e-012e-4790-bf38-cce43184bc7d"))
-		hexHash := fmt.Sprintf("%x", bs)
-		hexHash == "6dd329aaba26cf4d1175eafef13e8f49b41d2c36be6832987cb559bd715dcfd2"
-	```
+	   ```golang
+		   hash := sha256.New()
+		   hash.Write([]byte("2023-09-12T14:08:15Z"))
+		   hash.Write([]byte("0.248848"))
+		   hash.Write([]byte("0.2489"))
+		   hash.Write([]byte("0.2488563207"))
+		   hash.Write([]byte("9165f28e-012e-4790-bf38-cce43184bc7d"))
+		   hexHash := fmt.Sprintf("%x", bs)
+		   hexHash == "6dd329aaba26cf4d1175eafef13e8f49b41d2c36be6832987cb559bd715dcfd2"
+	   ```
 	*/
 
 	hash := sha256.New()
@@ -108,18 +101,79 @@ func makeError(collector string, message string) map[string]string {
 	return m
 }
 
+// splitBuildProp provides a rudimentary helper to split build properties.
+func splitBuildProp(property string) string {
+	return strings.TrimSpace(strings.Split(property, "=")[1])
+}
+
+// readBuildProperties populates a buildProperties object so that it
+// can be used to output information about this binary.
+//
+//    E.g.
+//    ```
+//    {
+//	      -ldflags -s -w
+//        -X main.version=100.0.0-SNAPSHOT-057f3fc
+//        -X main.commit=057f3fc6318d1824148bf91de5ef674fe8b9a504
+//        -X main.date=2024-01-29T19:14:07Z
+//        -X main.builtBy=goreleaser
+//    }
+//    ```
+//
+//
+func readBuildProperties() value.BuildProperties {
+	bp := value.BuildProperties{}
+	x, _ := debug.ReadBuildInfo()
+	for _, settings := range x.Settings {
+		if settings.Key != "-ldflags" {
+			continue
+		}
+		setting := strings.Split(settings.Value, "-X")
+		for _, property := range setting {
+			if strings.Contains(property, "main.version") {
+				bp.Version = splitBuildProp(property)
+			}
+			if strings.Contains(property, "main.commit") {
+				bp.Commit = splitBuildProp(property)
+			}
+			if strings.Contains(property, "main.date") {
+				bp.Date = splitBuildProp(property)
+			}
+		}
+	}
+	return bp
+}
+
+// generateMessageObject provides a helper function to generate the
+// remainder of the Orcfax message at whatever point in the validation
+// the procedure ends.
+func generateMessageObject(collectorData value.OrcfaxCollectorData) value.OrcfaxMessage {
+	nodeIdentity := readAndAttachIdentity()
+	collectorData.ContentSignature = createContentSignature(
+		collectorData.Timestamp,
+		collectorData.DataPoints,
+		nodeIdentity.NodeID,
+	)
+	msg := value.OrcfaxMessage{}
+	msg.Message = collectorData
+	msg.Message.Identity = nodeIdentity
+	msg.NodeID = nodeIdentity.NodeID
+	msg.ValidationTimestamp = time.Now().UTC().Format(utcTimeFormat)
+	return msg
+}
+
 // MarshalOrcfax returns an Orcfax validator collector profile,
 func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 
-	const utcTimeFormat = "2006-01-02T15:04:05Z"
-
 	if p.Error != nil {
-		lg.Printf("to handle, errors if not enough data, e.g. TUSD/USD %s", p.Error)
+		// p.Error acts like a global error and affects all the feeds.
+		// we simply need to return here
 		collectorData := value.OrcfaxCollectorData{}
 		msg := value.OrcfaxMessage{}
 		m := makeError("ALL", fmt.Sprintf("%s", p.Error))
 		collectorData.Errors = append(collectorData.Errors, m)
 		msg.Message = collectorData
+		msg = generateMessageObject(collectorData)
 		return msg, nil
 	}
 
@@ -132,33 +186,7 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 	var dataPoints []string
 	var rawData []value.OrcfaxRaw
 
-	var codeVersion string
-	var codeCommit string
-
-	// main.version=0.23.1-SNAPSHOT-e2471f6
-	// main.commit=e2471f6b706a095141bbe4009ea5eab2362cfdcc
-	// main.date=2023-12-29T15:04:14Z
-	// main.builtBy=goreleaser
-
-	x, _ := debug.ReadBuildInfo()
-	for _, v := range x.Settings {
-		if v.Key == "-ldflags" {
-			g := strings.Split(v.Value, "-X")
-			for _, v2 := range g {
-				if strings.Contains(v2, "main.version") {
-					codeVersion = strings.TrimSpace(strings.Split(v2, "=")[1])
-				}
-				if strings.Contains(v2, "main.commit") {
-					codeCommit = strings.TrimSpace(strings.Split(v2, "=")[1])
-				}
-				if strings.Contains(v2, "main.date") {
-					lg.Println("XXXXX %s", v2)
-					//dat = strings.Split(v2, "=")[1]
-				}
-			}
-
-		}
-	}
+	buildProperties := readBuildProperties()
 
 	for _, t := range p.SubPoints {
 		for _, tt := range t.SubPoints {
@@ -201,7 +229,13 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 			// continue to add to the raw data output.
 			raw := value.OrcfaxRaw{}
 
-			raw.Collector = fmt.Sprintf("%s.%s.%s.%s", origin, collector, codeVersion, codeCommit)
+			raw.Collector = fmt.Sprintf(
+				"%s.%s.%s.%s",
+				origin,
+				collector,
+				buildProperties.Version,
+				buildProperties.Commit,
+			)
 
 			raw.Response = val
 			raw.RequestURL = tt.Meta["request_url"].(string)
@@ -221,20 +255,6 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 		collectorData.Errors = append(collectorData.Errors, (makeError("ALL", err.Error())))
 	}
 
-	msg := value.OrcfaxMessage{}
-
-	nodeIdentity := readAndAttachIdentity()
-
-	collectorData.ContentSignature = createContentSignature(
-		collectorData.Timestamp,
-		collectorData.DataPoints,
-		nodeIdentity.NodeID,
-	)
-	msg.Message = collectorData
-	msg.Message.Identity = nodeIdentity
-
-	msg.NodeID = nodeIdentity.NodeID
-	msg.ValidationTimestamp = time.Now().UTC().Format(utcTimeFormat)
-
+	msg := generateMessageObject(collectorData)
 	return msg, nil
 }
