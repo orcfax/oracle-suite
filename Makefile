@@ -2,6 +2,14 @@
 
 .PHONY: lint snapshot help
 
+gofer-snapshot: 						## Build a snapshot of gofer.
+	cd cmd/gofer;
+	goreleaser build --snapshot --single-target --clean -f cmd/gofer/.goreleaser.yml
+
+gofer-release:                          ## Build a gofer release..
+	cd cmd/gofer;
+	goreleaser release --skip-publish --clean -f cmd/gofer/.goreleaser.yml
+
 lint:                                   ## Lint the source code (--ignore-errors to ignore errs)
 	go fmt ./...
 	staticcheck ./...

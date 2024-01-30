@@ -21,6 +21,7 @@ import (
 
 	suite "github.com/chronicleprotocol/oracle-suite"
 	"github.com/chronicleprotocol/oracle-suite/cmd"
+	"github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider"
 	gofer "github.com/chronicleprotocol/oracle-suite/pkg/config/gofernext"
 	"github.com/spf13/cobra"
 )
@@ -31,10 +32,10 @@ var (
 	date    = "1970-01-01T00:00:01Z"
 )
 
-const appname = "orcfax-chronicle-collector"
-const timeFormat = "2006-01-02 15:04:05"
+const appname = "gofer"
+const logTimeFormat = "2006-01-02 15:04:05"
 
-var agent string = fmt.Sprintf("oracle-suite/%s", version)
+var agent string = dataprovider.UserAgent
 
 func versionFunc() *cobra.Command {
 	var versionCmd = &cobra.Command{
@@ -42,7 +43,7 @@ func versionFunc() *cobra.Command {
 		Short: "print the version details",
 		Long:  `print the version details`,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Fprintf(os.Stderr, "%s (%s) commit: %s date: %s\n", agent, version, commit, date)
+			fmt.Fprintf(os.Stderr, "%s: %s (%s) commit: %s date: %s\n", appname, agent, version, commit, date)
 		},
 	}
 	return versionCmd

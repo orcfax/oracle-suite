@@ -42,7 +42,7 @@ func generateNewIdentity(idLoc string) {
 	identJS, _ := json.MarshalIndent(ident, "", "   ")
 	err := os.WriteFile(idLoc, identJS, 0644)
 	if err != nil {
-		lg.Println(
+		lg.Printf(
 			"identity hasn't been created, ensure '%s' can be written to, to prevent ipinfo API request volume failures",
 			idLoc,
 		)

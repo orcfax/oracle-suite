@@ -17,7 +17,7 @@ type logWriter struct{}
 //	`// 2023-11-27 11:36:57 ERROR :: golang-app:100:main() :: this is an error message, ...some diagnosis`
 func (lw *logWriter) Write(logString []byte) (int, error) {
 	return fmt.Fprintf(os.Stderr, "%s :: %s :: %s",
-		time.Now().UTC().Format(timeFormat),
+		time.Now().UTC().Format(logTimeFormat),
 		appname,
 		string(logString),
 	)

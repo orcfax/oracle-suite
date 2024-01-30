@@ -47,6 +47,9 @@
         "Cardano",
         "chronicleprotocol",
         "datapoint",
+        "dataprovider",
+        "goarch",
+        "gofernext",
         "goreleaser",
         "hitbtc",
         "ipinfo",
@@ -55,6 +58,7 @@
         "ldflags",
         "maputil",
         "Ogmios",
+        "treerender",
         "upbit",
         "Validatable"
     ]

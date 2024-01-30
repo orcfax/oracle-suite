@@ -28,7 +28,17 @@ import (
 // UserAgent is hardcoded for now, but we will want to configure this
 // using build parameters. It is exported but perhaps only temporarily.
 // Is there a place these can be configured sensibly in the HCL file?
-const UserAgent = "collectorTest/0.0.0"
+var userAgentApp = "orcfax-chronicle-collector"
+
+// version is added dynamically through -ldflags options providing
+// access to release tags.
+var version = "0.0.0"
+
+var UserAgent string
+
+func init() {
+	UserAgent = fmt.Sprintf("%s/%s", userAgentApp, version)
+}
 
 type configOrigin struct {
 	// Name of the origin.

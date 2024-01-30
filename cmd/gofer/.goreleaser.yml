@@ -1,6 +1,7 @@
 project_name: gofer
 builds:
-- env: [CGO_ENABLED=0]
+- main: ./cmd/gofer/
+  env: [CGO_ENABLED=0]
   goos:
     - linux
     - windows
@@ -21,6 +22,15 @@ builds:
       goarch: 386
     - goos: windows
       goarch: amd64
+  ldflags:
+    -s
+    -w
+    -X main.appname={{.ProjectName}}
+    -X main.version={{.Version}}
+    -X main.commit={{.Commit}}
+    -X main.date={{.Date}}
+    -X main.builtBy=orcfax-goreleaser
+    -X github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider.version={{.Version}}
 archives:
 - name_template: >-
     {{ .ProjectName }}_{{ .Version }}_
