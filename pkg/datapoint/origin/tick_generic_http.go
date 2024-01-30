@@ -100,7 +100,6 @@ func NewTickGenericHTTP(config TickGenericHTTPConfig) (*TickGenericHTTP, error) 
 
 // FetchDataPoints implements the Origin interface.
 func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map[any]datapoint.Point, error) {
-
 	pairs, ok := queryToPairs(query)
 	if !ok {
 		return nil, fmt.Errorf("invalid query type: %T, expected []Pair", query)

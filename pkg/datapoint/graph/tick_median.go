@@ -73,7 +73,6 @@ func (n *TickMedianNode) DataPoint() datapoint.Point {
 	// median.
 	for _, node := range n.nodes {
 		point := node.DataPoint()
-
 		if tm.IsZero() {
 			tm = point.Time
 		}

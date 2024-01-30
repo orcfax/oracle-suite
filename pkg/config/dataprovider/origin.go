@@ -25,16 +25,15 @@ import (
 	"github.com/hashicorp/hcl/v2"
 )
 
-// UserAgent is hardcoded for now, but we will want to configure this
-// using build parameters. It is exported but perhaps only temporarily.
-// Is there a place these can be configured sensibly in the HCL file?
+// Configure UserAgent dynamically through build parameters and
+// initialize below. Export for verification in gofer version info.
+var UserAgent string
+
 var userAgentApp = "orcfax-chronicle-collector"
 
 // version is added dynamically through -ldflags options providing
 // access to release tags.
 var version = "0.0.0"
-
-var UserAgent string
 
 func init() {
 	UserAgent = fmt.Sprintf("%s/%s", userAgentApp, version)
@@ -203,11 +202,9 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 	case *configOriginStatic:
 		return origin.NewStatic(), nil
 	case *configOriginTickGenericJQ:
-
 		// Add an Orcfax user-agent.
 		headers := http.Header{}
 		headers.Add("user-agent", UserAgent)
-
 		origin, err := origin.NewTickGenericJQ(origin.TickGenericJQConfig{
 			URL:   o.URL,
 			Query: o.JQ,
@@ -279,11 +276,11 @@ func (c *configOrigin) configureOrigin(d Dependencies) (origin.Origin, error) {
 		return origin, nil
 	case *configOriginCurve:
 		origin, err := origin.NewCurve(origin.CurveConfig{
-			Client:                      d.Clients[o.Contracts.EthereumClient],
+			Client: d.Clients[o.Contracts.EthereumClient],
 			StableSwapContractAddresses: o.Contracts.StableSwapContractAddresses,
 			CryptoSwapContractAddresses: o.Contracts.CryptoSwapContractAddresses,
-			Blocks:                      averageFromBlocks,
-			Logger:                      d.Logger,
+			Blocks: averageFromBlocks,
+			Logger: d.Logger,
 		})
 		if err != nil {
 			return nil, &hcl.Diagnostic{
