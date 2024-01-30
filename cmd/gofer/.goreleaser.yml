@@ -52,3 +52,10 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+signs:
+  - id: checksum_objects
+    artifacts: checksum
+    args: ["-u", "ross@orcfax.io", "--output", "${signature}", "--detach-sign", "${artifact}"]
+  - id: binary_objects
+    artifacts: binary
+    args: ["-u", "ross@orcfax.io", "--output", "${signature}", "--detach-sign", "${artifact}"]
