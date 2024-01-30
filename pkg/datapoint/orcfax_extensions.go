@@ -17,7 +17,10 @@ package datapoint
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -31,27 +34,41 @@ import (
 
 const utcTimeFormat = "2006-01-02T15:04:05Z"
 
+// generateNewIdentity allows us to initialize an identity on this
+// collector when one doesn't already exist.
+func generateNewIdentity(idLoc string) {
+	lg.Printf("creating a new identity: '%s'", idLoc)
+	ident := identity.GetIdentity("", "", "ws://")
+	identJS, _ := json.MarshalIndent(ident, "", "   ")
+	err := os.WriteFile(idLoc, identJS, 0644)
+	if err != nil {
+		lg.Println(
+			"identity hasn't been created, ensure '%s' can be written to, to prevent ipinfo API request volume failures",
+			idLoc,
+		)
+	}
+}
+
 // readAndAttachIdentity will read the local node-id file and attach it
 // to the collected record. If the identity hasn't been created yet then
 // it is created for reuse later on.
 func readAndAttachIdentity() identity.Identity {
-	const nodeIdentityLocation = "/tmp/.node-identity.json"
+	tmp := os.TempDir()
+	idLoc := filepath.Join(tmp, ".node-identity.json")
 
 	// Load the identity to enable it to be updated.
-	ident, err := identity.LoadCache(nodeIdentityLocation)
+	ident, err := identity.LoadCache(idLoc)
 	if err != nil {
 		// In future implementations we need the handshake to
 		// determine whether or not a new identity can just be
-		// created.
+		// created.I.e.
 		lg.Printf("error loading existing identity: '%s' cannot retrieve previous data", err)
+		generateNewIdentity(idLoc)
 	}
 
-	if (ident == identity.Identity{}) {
-		lg.Printf("creating a new id: %s", nodeIdentityLocation)
-	} else {
-		lg.Printf("retrieved id: '%s'", ident.NodeID)
-		lg.Printf("first initialized: '%s'", ident.InitializationDate)
-	}
+	ident, _ = identity.LoadCache(idLoc)
+	lg.Printf("retrieved id: '%s'", ident.NodeID)
+	lg.Printf("first initialized: '%s'", ident.InitializationDate)
 
 	return ident
 }
@@ -109,25 +126,26 @@ func splitBuildProp(property string) string {
 // readBuildProperties populates a buildProperties object so that it
 // can be used to output information about this binary.
 //
-//    E.g.
-//    ```
-//    {
-//	      -ldflags -s -w
-//        -X main.version=100.0.0-SNAPSHOT-057f3fc
-//        -X main.commit=057f3fc6318d1824148bf91de5ef674fe8b9a504
-//        -X main.date=2024-01-29T19:14:07Z
-//        -X main.builtBy=goreleaser
-//    }
-//    ```
-//
-//
+//	   E.g.
+//	   ```
+//	   {
+//		      -ldflags -s -w
+//	       -X main.version=100.0.0-SNAPSHOT-057f3fc
+//	       -X main.commit=057f3fc6318d1824148bf91de5ef674fe8b9a504
+//	       -X main.date=2024-01-29T19:14:07Z
+//	       -X main.builtBy=goreleaser
+//	   }
+//	   ```
 func readBuildProperties() value.BuildProperties {
 	buildProps, _ := debug.ReadBuildInfo()
 	return parseBuildProperties(buildProps.Settings)
 }
 
+// parseBuildProperties handles the logic required to work through the
+// build settings key-values and extract the values we need.
 func parseBuildProperties(buildProperties []debug.BuildSetting) value.BuildProperties {
 	buildProps := value.BuildProperties{}
+	buildProps.Initialize()
 	for _, settings := range buildProperties {
 		if settings.Key != "-ldflags" {
 			continue
@@ -166,73 +184,70 @@ func generateMessageObject(collectorData value.OrcfaxCollectorData) value.Orcfax
 	return msg
 }
 
-// MarshalOrcfax returns an Orcfax validator collector profile,
-func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
-
-	if p.Error != nil {
-		// p.Error acts like a global error and affects all the feeds.
-		// we simply need to return here
-		collectorData := value.OrcfaxCollectorData{}
-		msg := value.OrcfaxMessage{}
-		m := makeError("ALL", fmt.Sprintf("%s", p.Error))
-		collectorData.Errors = append(collectorData.Errors, m)
-		msg.Message = collectorData
-		msg = generateMessageObject(collectorData)
-		return msg, nil
-	}
-
-	medianPrice := p.Value.(value.Tick)
-	feedPair := medianPrice.Pair
+// generateGlobalErrorStateMessage returns a blank message object.
+func generateGlobalErrorStateMessage(point Point) (value.OrcfaxMessage, error) {
 	collectorData := value.OrcfaxCollectorData{}
-	calculated, _ := priceToString(medianPrice)
-	collectorData.CalculatedValue = calculated
-	collectorData.Timestamp = time.Now().UTC().Format(utcTimeFormat)
+	msg := value.OrcfaxMessage{}
+	errorEntry := makeError("GLOBAL", fmt.Sprintf("%s", point.Error))
+	collectorData.Errors = append(collectorData.Errors, errorEntry)
+	msg.Message = collectorData
+	msg = generateMessageObject(collectorData)
+	return msg, nil
+}
+
+func appendError(feedPair value.Pair, collectorData value.OrcfaxCollectorData, err string) value.OrcfaxCollectorData {
+	collectorData.Errors = append(
+		collectorData.Errors,
+		makeError(feedPair.String(), err))
+	return collectorData
+}
+
+// processExchangeData processes each individual exchange output
+// formatting it so that it can be received by the Orcfax collector.
+func processExchangeData(
+	feedPair value.Pair,
+	point Point,
+	collectorData value.OrcfaxCollectorData) value.OrcfaxCollectorData {
 	var dataPoints []string
 	var rawData []value.OrcfaxRaw
 
+	// We need to augment the exchange data information with the
+	// executable's build properties so we read these here.
 	buildProperties := readBuildProperties()
 
-	for _, t := range p.SubPoints {
-		for _, tt := range t.SubPoints {
-			origin := tt.Meta["origin"]
-			collector := tt.Meta["collector"]
-			subPointTick, ok := tt.Value.(value.Tick)
+	for _, globalSubPoints := range point.SubPoints {
+		for _, collectorSubPoint := range globalSubPoints.SubPoints {
+			origin := collectorSubPoint.Meta["origin"]
+			collector := collectorSubPoint.Meta["collector"]
+			// Cast the subPoint to a value that can be processed more
+			// granularly.
+			subPointTick, ok := collectorSubPoint.Value.(value.Tick)
 			if !ok {
-				collectorData.Errors = append(
-					collectorData.Errors,
-					makeError(feedPair.String(), fmt.Sprintf(
-						"%s: error with type casting header",
-						origin,
-					)))
+				collectorData = appendError(feedPair, collectorData, fmt.Sprintf(
+					"%s: error with type casting header, collector value cannot be parsed",
+					origin,
+				))
 				// continue onto the next collector.
 				continue
 			}
 			priceConverted, err := priceToString(subPointTick)
 			if err != nil {
-				collectorData.Errors = append(
-					collectorData.Errors,
-					makeError(
-						feedPair.String(),
-						fmt.Sprintf("%s: %s", origin, err),
-					))
+				collectorData = appendError(feedPair, collectorData, fmt.Sprintf("%s: %s", origin, err))
 				// continue onto the next collector.
 				continue
 			}
-			val, ok := tt.Meta["headers"].(string)
+			val, ok := collectorSubPoint.Meta["headers"].(string)
 			if !ok {
-				collectorData.Errors = append(
-					collectorData.Errors,
-					makeError(feedPair.String(), fmt.Sprintf(
-						"%s: error with type casting header",
-						origin,
-					)),
-				)
+				collectorData = appendError(feedPair, collectorData, fmt.Sprintf(
+					"%s: error with type casting header",
+					origin,
+				))
 				// continue onto the next collector.
 				continue
 			}
-			// continue to add to the raw data output.
-			raw := value.OrcfaxRaw{}
 
+			// Build the raw output associated with the Orcfax message object.
+			raw := value.OrcfaxRaw{}
 			raw.Collector = fmt.Sprintf(
 				"%s.%s.%s.%s",
 				origin,
@@ -240,25 +255,80 @@ func (p Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
 				buildProperties.Version,
 				buildProperties.Commit,
 			)
-
 			raw.Response = val
-			raw.RequestURL = tt.Meta["request_url"].(string)
-			raw.RequestTimestamp = tt.Time.UTC().Format(utcTimeFormat)
+			raw.RequestURL = collectorSubPoint.Meta["request_url"].(string)
+			raw.RequestTimestamp = collectorSubPoint.Time.UTC().Format(utcTimeFormat)
 			rawData = append(rawData, raw)
 			dataPoints = append(dataPoints, priceConverted)
 		}
 	}
-
 	collectorData.DataPoints = dataPoints
 	collectorData.Raw = rawData
-	collectorData.Feed = strings.Replace(feedPair.String(), "/", "-", 1)
+	return collectorData
+}
 
-	// NB. This is the Chronicle Labs concept of validation. We need to
-	// verify this and also augment it with ours.
-	if err := p.Validate(); err != nil {
-		collectorData.Errors = append(collectorData.Errors, (makeError("ALL", err.Error())))
+// generateCollectorObject creates the outline collector object
+// that contains global information about what was returned by the
+// collector as well as granular output form individual exchanges.
+func generateCollectorObject(point Point) value.OrcfaxCollectorData {
+
+	// capture global information.
+	medianPrice := point.Value.(value.Tick)
+	feedPair := medianPrice.Pair
+
+	lg.Printf("processing feed pair: '%s'", feedPair)
+
+	collectorData := value.OrcfaxCollectorData{}
+	collectorData.Feed = strings.Replace(feedPair.String(), "/", "-", 1)
+	calculated, _ := priceToString(medianPrice)
+	collectorData.CalculatedValue = calculated
+	collectorData.Timestamp = time.Now().UTC().Format(utcTimeFormat)
+
+	collectorData = processExchangeData(feedPair, point, collectorData)
+
+	// We perform this nearly last so that we have the granular output
+	// above.
+	collectorData = finalizeValidation(point, collectorData)
+	return collectorData
+}
+
+// finalizeValidation performs Chronicle-labs own validation on the
+// data here.
+func finalizeValidation(point Point, collectorData value.OrcfaxCollectorData) value.OrcfaxCollectorData {
+	// Chronicle-labs Oracle suite has its own concept of validation
+	// that is performed on each data point before it arrives here.
+	// Doubly it can also validate the global object which is its function
+	// here to check for:
+	//
+	//   * global errors.
+	//   * calculated value not being set.
+	//   * time not being set.
+	//
+	// In the short-term there isn't a huge drawback having this final
+	// check as we understand the suite. We might move our own validation
+	// into the same function.
+	//
+	if err := point.Validate(); err != nil {
+		collectorData.Errors = append(collectorData.Errors, (makeError("GLOBAL", err.Error())))
+	}
+	return collectorData
+}
+
+// MarshalOrcfax returns an Orcfax validator collector profile given
+// the successful retrieval of price-pair data from the configured
+// sources.
+func (point Point) MarshalOrcfax() (value.OrcfaxMessage, error) {
+
+	if point.Error != nil {
+		// Global error across the collectors and so data cannot be
+		// retrieved.
+		return generateGlobalErrorStateMessage(point)
 	}
 
+	collectorData := generateCollectorObject(point)
+
+	// Add the collectorData to the final Orcfax message object.
 	msg := generateMessageObject(collectorData)
+
 	return msg, nil
 }

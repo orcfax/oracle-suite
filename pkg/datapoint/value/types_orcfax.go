@@ -40,19 +40,23 @@ type OrcfaxRaw struct {
 // buildProperties stores information read from the linker flags
 // associated with the binary created from this code. E.g.
 //
-//    ```
-//    {
-//	      -ldflags -s -w
-//        -X main.version=100.0.0-SNAPSHOT-057f3fc
-//        -X main.commit=057f3fc6318d1824148bf91de5ef674fe8b9a504
-//        -X main.date=2024-01-29T19:14:07Z
-//        -X main.builtBy=goreleaser
-//    }
-//    ```
-//
-//
+//	   ```
+//	   {
+//		      -ldflags -s -w
+//	       -X main.version=100.0.0-SNAPSHOT-057f3fc
+//	       -X main.commit=057f3fc6318d1824148bf91de5ef674fe8b9a504
+//	       -X main.date=2024-01-29T19:14:07Z
+//	       -X main.builtBy=goreleaser
+//	   }
+//	   ```
 type BuildProperties struct {
 	Commit  string
 	Version string
 	Date    string
+}
+
+func (buildProps *BuildProperties) Initialize() {
+	buildProps.Commit = "0000000000000000000000000000000000000000"
+	buildProps.Version = "dev-0.0.0"
+	buildProps.Date = "1970-01-01T00:00:00Z"
 }
