@@ -71,7 +71,7 @@ spire {
 }
 
 ethereum {
-  # Optional list of random Ethereum keys to use for signing. The name of the key is used to reference the key in other 
+  # Optional list of random Ethereum keys to use for signing. The name of the key is used to reference the key in other
   # sections.
   rand_keys = ["key"]
 
@@ -106,7 +106,7 @@ ethereum {
   }
 }
 
-# Configuration for the transport layer. 
+# Configuration for the transport layer.
 # Currently, libP2P and WebAPI transports are supported. At least one transport must be configured.
 transport {
   # Configuration for the LibP2P transport. LibP2P transport uses peer-to-peer communication.
@@ -115,7 +115,7 @@ transport {
     # List of feed addresses. Only messages signed by these addresses are accepted.
     feeds = var.feeds
 
-    # Seed used to generate the private key for the LibP2P node. 
+    # Seed used to generate the private key for the LibP2P node.
     # Optional. If not specified, the private key is generated randomly.
     priv_key_seed = "8c8eba62d853d3abdd7f3298341a622a8a9df37c3aba788028c646bdd915227c"
 
@@ -144,8 +144,8 @@ transport {
     ethereum_key = "default"
   }
 
-  # Configuration for the WebAPI transport. WebAPI transport allows to send messages using HTTP API. It is designed to 
-  # use over secure network, e.g. Tor, I2P or VPN. WebAPI sends messages to other nodes using HTTP requests. The list of 
+  # Configuration for the WebAPI transport. WebAPI transport allows to send messages using HTTP API. It is designed to
+  # use over secure network, e.g. Tor, I2P or VPN. WebAPI sends messages to other nodes using HTTP requests. The list of
   # nodes is retrieved from the address book.
   # Optional.
   webapi {

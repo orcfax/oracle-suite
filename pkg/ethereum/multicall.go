@@ -88,7 +88,7 @@ var multicallMethod = abi.MustParseMethod(`
 	function aggregate(
 		(address target, bytes callData)[] memory calls
 	) public returns (
-		uint256 blockNumber, 
+		uint256 blockNumber,
 		bytes[] memory returnData
 	)`,
 )

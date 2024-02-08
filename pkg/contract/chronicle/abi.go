@@ -60,10 +60,10 @@ func init() {
 		`wat()(bytes32_string wat)`,
 		`bar()(uint8 bar)`,
 		`poke(
-			uint256[] calldata val_, 
-			uint256[] calldata age_, 
-			uint8[] calldata v, 
-			bytes32[] calldata r, 
+			uint256[] calldata val_,
+			uint256[] calldata age_,
+			uint8[] calldata v,
+			bytes32[] calldata r,
 			bytes32[] calldata s
 		)`,
 	)

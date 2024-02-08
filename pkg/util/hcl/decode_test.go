@@ -450,9 +450,9 @@ func TestDecodeEmbeddedStruct(t *testing.T) {
 		Block block `hcl:"block,block"`
 	}
 	var data = `
-		block "foo" "bar" { 
-			attr = "bar" 
-			emb_attr = "baz" 
+		block "foo" "bar" {
+			attr = "bar"
+			emb_attr = "baz"
 		}
 	`
 	var dest config

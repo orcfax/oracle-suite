@@ -77,7 +77,7 @@ spectre {
 }
 
 ethereum {
-  # Optional list of random Ethereum keys to use for signing. The name of the key is used to reference the key in other 
+  # Optional list of random Ethereum keys to use for signing. The name of the key is used to reference the key in other
   # sections.
   rand_keys = ["key"]
 
@@ -112,7 +112,7 @@ ethereum {
   }
 }
 
-# Configuration for the transport layer. 
+# Configuration for the transport layer.
 # Currently, libP2P and WebAPI transports are supported. At least one transport must be configured.
 transport {
   # Configuration for the LibP2P transport. LibP2P transport uses peer-to-peer communication.
@@ -120,8 +120,8 @@ transport {
   libp2p {
     # List of feed addresses. Only messages signed by these addresses are accepted.
     feeds = var.feeds
-    
-    # Seed used to generate the private key for the LibP2P node. 
+
+    # Seed used to generate the private key for the LibP2P node.
     # Optional. If not specified, the private key is generated randomly.
     priv_key_seed = "8c8eba62d853d3abdd7f3298341a622a8a9df37c3aba788028c646bdd915227c"
 
@@ -146,14 +146,14 @@ transport {
     disable_discovery = false
   }
 
-  # Configuration for the WebAPI transport. WebAPI transport allows to send messages using HTTP API. It is designed to 
-  # use over secure network, e.g. Tor, I2P or VPN. WebAPI sends messages to other nodes using HTTP requests. The list of 
+  # Configuration for the WebAPI transport. WebAPI transport allows to send messages using HTTP API. It is designed to
+  # use over secure network, e.g. Tor, I2P or VPN. WebAPI sends messages to other nodes using HTTP requests. The list of
   # nodes is retrieved from the address book.
   # Optional.
   webapi {
     # List of feed addresses. Only messages signed by these addresses are accepted.
     feeds = var.feeds
-    
+
     # Listen address for the WebAPI transport. The address must be in the format `host:port`.
     # If used with Tor, it is recommended to listen on 0.0.0.0 address.
     listen_addr = "0.0.0.0.8080"
@@ -200,7 +200,7 @@ Usage:
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
-  run         
+  run
 
 Flags:
   -c, --config string                                  spectre config file (default "./config.hcl")

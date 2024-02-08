@@ -203,4 +203,3 @@ services:
       # default RPC client
       CFG_CHAIN_RPC_URLS: ${SEP_RPCS}
       CFG_CHAIN_ID: ${SEP_CHID}
-
