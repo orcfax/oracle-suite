@@ -1,0 +1,30 @@
+name: linting
+on: ["push", "pull_request"]
+jobs:
+  ci:
+    name: "run linting"
+    strategy:
+      fail-fast: true
+      matrix:
+        os:  ["ubuntu-latest", "macOS-latest"]
+        go:  ["1.20.x", "1.21.x"]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: "checkout"
+      uses: actions/checkout@v2
+    - name: "fetch unshallow"
+      run: git fetch --prune --unshallow
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ matrix.go }}
+    - name: "fmt"
+      run: if [ "$(go fmt ./... | wc -l)" -gt 0 ]; then echo "go fmt failed, please run again locally"; exit 1; fi
+      if: matrix.os == 'ubuntu-latest'
+    - name: "test"
+      run: "go test ./..."
+    - name: "vet"
+      run: "go vet ./..."
+    - run: "go install honnef.co/go/tools/cmd/staticcheck@latest"
+    - name: staticcheck
+      run: "staticcheck ./..."
