@@ -1,6 +1,7 @@
 project_name: gofer
 builds:
 - main: ./cmd/gofer/
+  binary: gofer
   env:
     - CGO_ENABLED=0
   goos:
