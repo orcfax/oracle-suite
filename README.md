@@ -30,8 +30,24 @@ make gofer-release
 Releases are currently managed by the GitHub [release][gh-1] action in this
 repository.
 
+#### Signing
+
+It is possible to sign the checksums and binaries associated with a release but
+this is still in testing. A GPG signature is required. Currently the process
+is configured to select an `admin@orcfax.io` signing key.
+
+To create a key follow the instructions on running:
+
+```sh
+gpg --full-generate-key
+```
+
+The [GitHub documentation][gh-2] provides useful information about generating a
+GPG key.
+
 [gr-1]: https://goreleaser.com/install/
 [gh-1]: .github/workflows/release.yml
+[gh-2]: https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
 
 ## License
 
