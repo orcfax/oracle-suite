@@ -59,6 +59,7 @@
         "maputil",
         "Ogmios",
         "treerender",
+        "trimpath",
         "upbit",
         "Validatable"
     ]
