@@ -8,6 +8,10 @@ gofer-snapshot: 						## Build a snapshot of gofer.
 
 gofer-release:                          ## Build a gofer release..
 	cd cmd/gofer;
+	goreleaser release --skip-publish --clean -f cmd/gofer/.goreleaser.yml --skip-sign
+
+gofer-release-sign:                     ## Build a gofer release..
+	cd cmd/gofer;
 	goreleaser release --skip-publish --clean -f cmd/gofer/.goreleaser.yml
 
 lint:                                   ## Lint the source code (--ignore-errors to ignore errs)
