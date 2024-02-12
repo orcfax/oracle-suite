@@ -22,13 +22,16 @@ builds:
       goarch: 386
     - goos: windows
       goarch: amd64
+  mod_timestamp: '{{ .CommitTimestamp }}'
+  flags:
+    - -trimpath
   ldflags:
     -s
     -w
     -X main.appname={{.ProjectName}}
     -X main.version={{.Version}}
     -X main.commit={{.Commit}}
-    -X main.date={{.Date}}
+    -X main.date={{.CommitDate}}
     -X main.builtBy=orcfax-goreleaser
     -X github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider.version={{.Version}}
 archives:
