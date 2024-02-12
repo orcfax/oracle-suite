@@ -39,15 +39,15 @@ import (
 	"github.com/defiweb/go-eth/wallet"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/httpserver"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/webapi/pb"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/sliceutil"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/timeutil"
+	"github.com/orcfax/oracle-suite/pkg/httpserver"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/webapi/pb"
+	"github.com/orcfax/oracle-suite/pkg/util/chanutil"
+	"github.com/orcfax/oracle-suite/pkg/util/maputil"
+	"github.com/orcfax/oracle-suite/pkg/util/sliceutil"
+	"github.com/orcfax/oracle-suite/pkg/util/timeutil"
 )
 
 const (

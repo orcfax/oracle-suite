@@ -29,10 +29,10 @@ import (
 
 	"github.com/hashicorp/hcl/v2/ext/dynblock"
 
-	utilHCL "github.com/chronicleprotocol/oracle-suite/pkg/util/hcl"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/hcl/ext/include"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/hcl/ext/variables"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/hcl/funcs"
+	utilHCL "github.com/orcfax/oracle-suite/pkg/util/hcl"
+	"github.com/orcfax/oracle-suite/pkg/util/hcl/ext/include"
+	"github.com/orcfax/oracle-suite/pkg/util/hcl/ext/variables"
+	"github.com/orcfax/oracle-suite/pkg/util/hcl/funcs"
 )
 
 var hclContext = &hcl.EvalContext{

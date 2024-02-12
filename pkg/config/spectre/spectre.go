@@ -21,19 +21,19 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/config"
-	ethereumConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	loggerConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/logger"
-	relayConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/relay"
-	transportConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/transport"
-	datapointStore "github.com/chronicleprotocol/oracle-suite/pkg/datapoint/store"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	musigStore "github.com/chronicleprotocol/oracle-suite/pkg/musig/store"
-	"github.com/chronicleprotocol/oracle-suite/pkg/relay"
+	"github.com/orcfax/oracle-suite/config"
+	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	loggerConfig "github.com/orcfax/oracle-suite/pkg/config/logger"
+	relayConfig "github.com/orcfax/oracle-suite/pkg/config/relay"
+	transportConfig "github.com/orcfax/oracle-suite/pkg/config/transport"
+	datapointStore "github.com/orcfax/oracle-suite/pkg/datapoint/store"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	musigStore "github.com/orcfax/oracle-suite/pkg/musig/store"
+	"github.com/orcfax/oracle-suite/pkg/relay"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
 )
 
 // Config is the configuration for Spectre.

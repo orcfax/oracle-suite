@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
 
 // TickInvertNode is a node that inverts a price. E.g. if the asset query is BTC/USD

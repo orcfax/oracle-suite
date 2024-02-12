@@ -19,11 +19,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/util/chanutil"
 )
 
 // Logger logs all messages sent and received by the transport.

@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 func TestTickMedianNode(t *testing.T) {

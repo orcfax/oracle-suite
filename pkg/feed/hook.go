@@ -19,8 +19,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
 
 // TickPrecisionHook is a hook that limits the precision of the price and volume

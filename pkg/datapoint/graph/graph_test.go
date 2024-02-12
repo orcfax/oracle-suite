@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 type mockOrigin struct {

@@ -27,12 +27,12 @@ import (
 	"github.com/defiweb/go-eth/rpc"
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/maputil"
 )
 
 const LidoLSTLoggerTag = "LIDO_LST_ORIGIN"

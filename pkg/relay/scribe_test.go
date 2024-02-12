@@ -27,11 +27,11 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract"
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/chronicle"
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/mock"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/contract"
+	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
+	"github.com/orcfax/oracle-suite/pkg/contract/mock"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 func TestScribe(t *testing.T) {

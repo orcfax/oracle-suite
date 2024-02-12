@@ -24,8 +24,8 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/price/median"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages/pb"
+	"github.com/orcfax/oracle-suite/pkg/price/median"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages/pb"
 )
 
 // Deprecated: use DataPointV1MessageName instead.

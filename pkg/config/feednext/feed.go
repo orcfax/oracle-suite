@@ -21,15 +21,15 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/signer"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/signer"
 
-	ethereumConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	"github.com/chronicleprotocol/oracle-suite/pkg/feed"
+	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	"github.com/orcfax/oracle-suite/pkg/feed"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/timeutil"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/util/timeutil"
 )
 
 const (

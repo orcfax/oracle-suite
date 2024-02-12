@@ -23,19 +23,19 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/config"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/signer"
+	"github.com/orcfax/oracle-suite/config"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/signer"
 
-	ethereumConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	loggerConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/logger"
-	transportConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/store"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/spire"
-	pkgSupervisor "github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	pkgTransport "github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
+	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	loggerConfig "github.com/orcfax/oracle-suite/pkg/config/logger"
+	transportConfig "github.com/orcfax/oracle-suite/pkg/config/transport"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/store"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/spire"
+	pkgSupervisor "github.com/orcfax/oracle-suite/pkg/supervisor"
+	pkgTransport "github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
 )
 
 // Config is the configuration for Spire.

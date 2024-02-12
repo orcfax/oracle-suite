@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/hcl"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/util/hcl"
 )
 
 // NewRootCommand returns a Cobra command with the given name and version.

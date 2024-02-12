@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/origin"
-	utilHCL "github.com/chronicleprotocol/oracle-suite/pkg/util/hcl"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/origin"
+	utilHCL "github.com/orcfax/oracle-suite/pkg/util/hcl"
 
 	"github.com/hashicorp/hcl/v2"
 )

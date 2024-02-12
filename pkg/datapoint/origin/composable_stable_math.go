@@ -3,7 +3,7 @@ package origin
 import (
 	"fmt"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 const AmpPrecision = 1e3

@@ -19,7 +19,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/multiformats/go-multiaddr"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 // ConnectionLogger logs connected and disconnected hosts,

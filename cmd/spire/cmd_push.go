@@ -23,9 +23,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/chronicleprotocol/oracle-suite/cmd"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config/spire"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/cmd"
+	"github.com/orcfax/oracle-suite/pkg/config/spire"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
 )
 
 func NewPushCmd(cfg *spire.Config, cf *cmd.ConfigFlags, lf *cmd.LoggerFlags) *cobra.Command {

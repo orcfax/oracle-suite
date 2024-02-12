@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 // Static is an origin that returns the same value for all queries.

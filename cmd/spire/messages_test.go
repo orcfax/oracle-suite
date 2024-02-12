@@ -24,12 +24,12 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	"github.com/chronicleprotocol/oracle-suite/pkg/price/median"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/price/median"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 func TestHandleMessage(t *testing.T) {

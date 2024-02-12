@@ -5,7 +5,7 @@ import (
 
 	"runtime/debug"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
 
 func TestReadBuildProperties(t *testing.T) {

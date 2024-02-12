@@ -24,8 +24,8 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract"
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/mock"
+	"github.com/orcfax/oracle-suite/pkg/contract"
+	"github.com/orcfax/oracle-suite/pkg/contract/mock"
 )
 
 type mockClient struct {

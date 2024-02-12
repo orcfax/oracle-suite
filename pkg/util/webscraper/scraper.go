@@ -28,7 +28,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 const LoggerTag = "SCRAPER"

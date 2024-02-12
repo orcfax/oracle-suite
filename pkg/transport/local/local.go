@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/util/chanutil"
 )
 
 const TransportName = "local"

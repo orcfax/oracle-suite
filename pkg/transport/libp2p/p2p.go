@@ -31,13 +31,13 @@ import (
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/multiformats/go-multiaddr"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p/crypto/ethkey"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p/internal"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p/crypto/ethkey"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p/internal"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/util/chanutil"
 )
 
 const LoggerTag = "LIBP2P"

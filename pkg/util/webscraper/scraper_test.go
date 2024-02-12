@@ -26,7 +26,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 
-	logr "github.com/chronicleprotocol/oracle-suite/pkg/log/logrus"
+	logr "github.com/orcfax/oracle-suite/pkg/log/logrus"
 )
 
 func setupServer(resp string) *httptest.Server {

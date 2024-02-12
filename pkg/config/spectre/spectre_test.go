@@ -22,9 +22,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/config"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/hcl"
+	"github.com/orcfax/oracle-suite/pkg/config"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/util/hcl"
 )
 
 func TestConfig(t *testing.T) {

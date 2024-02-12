@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
 )
 
 const (

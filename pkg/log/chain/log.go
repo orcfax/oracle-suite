@@ -19,8 +19,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/util/chanutil"
 )
 
 // New creates a new logger that can chain multiple loggers.

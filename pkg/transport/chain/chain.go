@@ -21,11 +21,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/chanutil"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/errutil"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/sliceutil"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/util/chanutil"
+	"github.com/orcfax/oracle-suite/pkg/util/errutil"
+	"github.com/orcfax/oracle-suite/pkg/util/sliceutil"
 )
 
 // Chain is a transport implementation that chains multiple transports

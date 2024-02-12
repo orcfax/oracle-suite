@@ -19,7 +19,7 @@ import (
 	"github.com/defiweb/go-eth/rpc"
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract"
+	"github.com/orcfax/oracle-suite/pkg/contract"
 )
 
 // FeedRegistry allows interacting with the FeedRegistry contract.

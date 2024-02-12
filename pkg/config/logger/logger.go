@@ -25,10 +25,10 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/config"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/chain"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/grafana"
+	"github.com/orcfax/oracle-suite/pkg/config"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log/chain"
+	"github.com/orcfax/oracle-suite/pkg/log/grafana"
 )
 
 type Dependencies struct {

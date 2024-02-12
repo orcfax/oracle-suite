@@ -24,10 +24,10 @@ import (
 	"github.com/libp2p/go-libp2p/core/peer"
 	"golang.org/x/time/rate"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p/crypto/ethkey"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p/internal/sets"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p/crypto/ethkey"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p/internal/sets"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 // RateLimiterConfig is a configuration for the RateLimiter option.

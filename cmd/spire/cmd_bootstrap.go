@@ -25,11 +25,11 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/spf13/cobra"
 
-	"github.com/chronicleprotocol/oracle-suite/cmd"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config/logger"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p"
+	"github.com/orcfax/oracle-suite/cmd"
+	"github.com/orcfax/oracle-suite/pkg/config/logger"
+	"github.com/orcfax/oracle-suite/pkg/config/transport"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p"
 )
 
 type BootstrapConfig struct {

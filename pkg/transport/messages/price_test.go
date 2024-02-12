@@ -31,7 +31,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/price/median"
+	"github.com/orcfax/oracle-suite/pkg/price/median"
 )
 
 type priceLog struct {

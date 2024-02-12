@@ -30,12 +30,12 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/ethereum/mocks"
-	"github.com/chronicleprotocol/oracle-suite/pkg/httpserver"
-	logMocks "github.com/chronicleprotocol/oracle-suite/pkg/log/mocks"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/webapi/pb"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/timeutil"
+	"github.com/orcfax/oracle-suite/pkg/ethereum/mocks"
+	"github.com/orcfax/oracle-suite/pkg/httpserver"
+	logMocks "github.com/orcfax/oracle-suite/pkg/log/mocks"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/webapi/pb"
+	"github.com/orcfax/oracle-suite/pkg/util/timeutil"
 )
 
 var fakeSignature = types.MustSignatureFromBytes(bytes.Repeat([]byte{0x01}, 65))

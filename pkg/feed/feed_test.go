@@ -26,14 +26,14 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	dataMocks "github.com/chronicleprotocol/oracle-suite/pkg/datapoint/mocks"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/local"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/timeutil"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	dataMocks "github.com/orcfax/oracle-suite/pkg/datapoint/mocks"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/local"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/timeutil"
 )
 
 var (

@@ -7,7 +7,7 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
 )
 
 type Recoverer struct {

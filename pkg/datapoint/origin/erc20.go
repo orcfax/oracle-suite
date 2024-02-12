@@ -11,7 +11,7 @@ import (
 	"github.com/defiweb/go-eth/rpc"
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/ethereum"
+	"github.com/orcfax/oracle-suite/pkg/ethereum"
 )
 
 //go:embed erc20_abi.json

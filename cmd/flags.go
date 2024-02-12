@@ -18,7 +18,7 @@ package cmd
 import (
 	"github.com/spf13/pflag"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/config"
+	"github.com/orcfax/oracle-suite/pkg/config"
 )
 
 func ConfigFlagsForConfig(d config.HasDefaults) ConfigFlags {

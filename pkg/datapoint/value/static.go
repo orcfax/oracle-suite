@@ -3,7 +3,7 @@ package value
 import (
 	"encoding/json"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 // StaticValue is a numeric value obtained from a static origin.

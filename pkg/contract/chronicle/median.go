@@ -28,8 +28,8 @@ import (
 	"github.com/defiweb/go-eth/rpc"
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/contract"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 // MedianPricePrecision is the precision of the price value in the Median contract

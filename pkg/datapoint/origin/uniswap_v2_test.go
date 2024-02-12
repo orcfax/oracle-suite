@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	ethereumMocks "github.com/chronicleprotocol/oracle-suite/pkg/ethereum/mocks"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	ethereumMocks "github.com/orcfax/oracle-suite/pkg/ethereum/mocks"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 type UniswapV2Suite struct {

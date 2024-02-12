@@ -18,11 +18,11 @@ package main
 import (
 	"github.com/defiweb/go-eth/hexutil"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/chronicle"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
+	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/util/maputil"
 )
 
 // This file contains functions that normalize messages received through the

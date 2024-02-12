@@ -22,13 +22,13 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/graph"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/origin"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/graph"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/origin"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/sliceutil"
+	"github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/util/sliceutil"
 )
 
 type Dependencies struct {

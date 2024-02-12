@@ -22,7 +22,7 @@ import (
 
 	"github.com/defiweb/go-eth/wallet"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
 )
 
 type Client struct {

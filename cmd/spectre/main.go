@@ -18,9 +18,9 @@ package main
 import (
 	"os"
 
-	suite "github.com/chronicleprotocol/oracle-suite"
-	"github.com/chronicleprotocol/oracle-suite/cmd"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config/spectre"
+	suite "github.com/orcfax/oracle-suite"
+	"github.com/orcfax/oracle-suite/cmd"
+	"github.com/orcfax/oracle-suite/pkg/config/spectre"
 )
 
 func main() {

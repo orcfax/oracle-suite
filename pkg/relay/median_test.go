@@ -26,13 +26,13 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract"
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/chronicle"
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/mock"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/store"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/contract"
+	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
+	"github.com/orcfax/oracle-suite/pkg/contract/mock"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/store"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 func TestMedian(t *testing.T) {

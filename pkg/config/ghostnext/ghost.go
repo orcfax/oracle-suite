@@ -21,17 +21,17 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/config"
-	configGoferNext "github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider"
-	ethereumConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	feedConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/feednext"
-	loggerConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/logger"
-	transportConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/feed"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	pkgSupervisor "github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	pkgTransport "github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages"
+	"github.com/orcfax/oracle-suite/config"
+	configGoferNext "github.com/orcfax/oracle-suite/pkg/config/dataprovider"
+	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	feedConfig "github.com/orcfax/oracle-suite/pkg/config/feednext"
+	loggerConfig "github.com/orcfax/oracle-suite/pkg/config/logger"
+	transportConfig "github.com/orcfax/oracle-suite/pkg/config/transport"
+	"github.com/orcfax/oracle-suite/pkg/feed"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	pkgSupervisor "github.com/orcfax/oracle-suite/pkg/supervisor"
+	pkgTransport "github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages"
 )
 
 // Config is the configuration for Ghost.

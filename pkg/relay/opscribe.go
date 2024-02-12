@@ -24,9 +24,9 @@ import (
 	"github.com/defiweb/go-eth/abi"
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/chronicle"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/sliceutil"
+	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/util/sliceutil"
 )
 
 type opScribe struct {

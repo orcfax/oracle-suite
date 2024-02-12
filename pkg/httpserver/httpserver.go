@@ -22,7 +22,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
 )
 
 const shutdownTimeout = 1 * time.Second

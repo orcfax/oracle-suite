@@ -22,13 +22,13 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 
-	"github.com/chronicleprotocol/oracle-suite/config"
-	dataproviderConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider"
-	ethereumConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	loggerConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/logger"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	pkgSupervisor "github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/config"
+	dataproviderConfig "github.com/orcfax/oracle-suite/pkg/config/dataprovider"
+	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	loggerConfig "github.com/orcfax/oracle-suite/pkg/config/logger"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	pkgSupervisor "github.com/orcfax/oracle-suite/pkg/supervisor"
 )
 
 // Config is the configuration for Gofer.

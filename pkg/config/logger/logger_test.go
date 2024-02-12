@@ -21,9 +21,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	suite "github.com/chronicleprotocol/oracle-suite"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
+	suite "github.com/orcfax/oracle-suite"
+	"github.com/orcfax/oracle-suite/pkg/config"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
 )
 
 func TestConfig(t *testing.T) {

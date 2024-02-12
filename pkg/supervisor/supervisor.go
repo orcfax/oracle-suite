@@ -21,10 +21,10 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/sysmon"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/errutil"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/sysmon"
+	"github.com/orcfax/oracle-suite/pkg/util/errutil"
 )
 
 const LoggerTag = "SUPERVISOR"

@@ -11,7 +11,7 @@ continue on the main README for this repository.
 
 The original documentation can be found [here][chronicle-readme-1]
 
-[chronicle-readme-1]: https://github.com/chronicleprotocol/oracle-suite/blob/master/cmd/gofer/README.md
+[chronicle-readme-1]: https://github.com/orcfax/oracle-suite/blob/master/cmd/gofer/README.md
 
 ## Installation
 

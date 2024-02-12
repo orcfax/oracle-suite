@@ -25,8 +25,8 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	suite "github.com/chronicleprotocol/oracle-suite"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	suite "github.com/orcfax/oracle-suite"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 const LoggerTag = "SYSMON"

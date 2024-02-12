@@ -22,12 +22,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	suite "github.com/chronicleprotocol/oracle-suite"
-	"github.com/chronicleprotocol/oracle-suite/cmd"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config"
-	ghost "github.com/chronicleprotocol/oracle-suite/pkg/config/ghostnext"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
+	suite "github.com/orcfax/oracle-suite"
+	"github.com/orcfax/oracle-suite/cmd"
+	"github.com/orcfax/oracle-suite/pkg/config"
+	ghost "github.com/orcfax/oracle-suite/pkg/config/ghostnext"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
 )
 
 func TestConfig_Ghost_Run(t *testing.T) {

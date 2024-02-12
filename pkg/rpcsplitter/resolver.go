@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"sort"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/rpcsplitter/types"
+	"github.com/orcfax/oracle-suite/pkg/rpcsplitter/types"
 )
 
 var errNotEnoughResponses = errors.New("not enough responses from RPC servers")

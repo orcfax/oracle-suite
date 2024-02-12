@@ -30,7 +30,7 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/defiweb/go-eth/wallet"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 const PriceMultiplier = 1e18

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
 )
 
 // ReferenceNode is a node that references another node.

@@ -22,9 +22,9 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/defiweb/go-eth/wallet"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/contract/chronicle"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
 
 // TickSigner signs tick data points and recovers the signer address from a

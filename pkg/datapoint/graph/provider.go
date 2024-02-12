@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/util/maputil"
 )
 
 type ErrModelNotFound struct {

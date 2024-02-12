@@ -1,6 +1,6 @@
 package graph
 
-import "github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
+import "github.com/orcfax/oracle-suite/pkg/datapoint"
 
 // Node represents a node in a graph.
 //

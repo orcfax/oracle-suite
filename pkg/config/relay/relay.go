@@ -23,15 +23,15 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/hashicorp/hcl/v2"
 
-	ethereumConfig "github.com/chronicleprotocol/oracle-suite/pkg/config/ethereum"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/signer"
-	datapointStore "github.com/chronicleprotocol/oracle-suite/pkg/datapoint/store"
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
-	musigStore "github.com/chronicleprotocol/oracle-suite/pkg/musig/store"
-	"github.com/chronicleprotocol/oracle-suite/pkg/relay"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/timeutil"
+	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/signer"
+	datapointStore "github.com/orcfax/oracle-suite/pkg/datapoint/store"
+	"github.com/orcfax/oracle-suite/pkg/log"
+	musigStore "github.com/orcfax/oracle-suite/pkg/musig/store"
+	"github.com/orcfax/oracle-suite/pkg/relay"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/util/timeutil"
 )
 
 type Services struct {

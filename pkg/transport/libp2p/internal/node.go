@@ -32,9 +32,9 @@ import (
 	"github.com/libp2p/go-libp2p/p2p/net/connmgr"
 	"github.com/multiformats/go-multiaddr"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p/internal/sets"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p/internal/sets"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log/null"
+	"github.com/orcfax/oracle-suite/pkg/log/null"
 )
 
 var ErrConnectionClosed = errors.New("connection is closed")

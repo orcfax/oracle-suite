@@ -22,7 +22,7 @@ import (
 	goethABI "github.com/defiweb/go-eth/abi"
 	"github.com/defiweb/go-eth/types"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 const (

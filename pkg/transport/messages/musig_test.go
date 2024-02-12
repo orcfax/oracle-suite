@@ -23,7 +23,7 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 func TestMuSigInitialize_MarshallBinary(t *testing.T) {

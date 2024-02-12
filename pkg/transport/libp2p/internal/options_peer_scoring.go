@@ -21,7 +21,7 @@ import (
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p/core/peer"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/libp2p/internal/sets"
+	"github.com/orcfax/oracle-suite/pkg/transport/libp2p/internal/sets"
 )
 
 // PeerScoring configures peer scoring parameters used in a pubsub system.

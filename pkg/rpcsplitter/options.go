@@ -20,7 +20,7 @@ import (
 
 	gethRPC "github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 type Option func(s *server) error

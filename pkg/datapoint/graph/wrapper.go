@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
 )
 
 // WrapperNode is a node that wraps another node with a custom meta.

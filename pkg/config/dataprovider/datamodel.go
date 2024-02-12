@@ -7,10 +7,10 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/zclconf/go-cty/cty"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/graph"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/origin"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	utilHCL "github.com/chronicleprotocol/oracle-suite/pkg/util/hcl"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/graph"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/origin"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	utilHCL "github.com/orcfax/oracle-suite/pkg/util/hcl"
 )
 
 const (

@@ -9,9 +9,9 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"golang.org/x/exp/maps"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
-	"github.com/chronicleprotocol/oracle-suite/pkg/ethereum"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/ethereum"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 type ComposableStablePoolConfig struct {

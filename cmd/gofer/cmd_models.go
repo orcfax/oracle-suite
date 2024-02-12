@@ -26,12 +26,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/chronicleprotocol/oracle-suite/cmd"
-	gofer "github.com/chronicleprotocol/oracle-suite/pkg/config/gofernext"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/supervisor"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/treerender"
+	"github.com/orcfax/oracle-suite/cmd"
+	gofer "github.com/orcfax/oracle-suite/pkg/config/gofernext"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/supervisor"
+	"github.com/orcfax/oracle-suite/pkg/util/maputil"
+	"github.com/orcfax/oracle-suite/pkg/util/treerender"
 )
 
 func NewModelsCmd(cfg supervisor.Config, cf *cmd.ConfigFlags, lf *cmd.LoggerFlags) *cobra.Command {

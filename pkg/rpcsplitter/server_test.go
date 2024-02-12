@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/rpcsplitter/types"
+	"github.com/orcfax/oracle-suite/pkg/rpcsplitter/types"
 )
 
 var blockWithHashesResp = json.RawMessage(`

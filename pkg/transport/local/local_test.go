@@ -21,7 +21,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport"
 )
 
 type testMsg struct {

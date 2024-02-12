@@ -21,7 +21,7 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/ethereum/mocks"
+	"github.com/orcfax/oracle-suite/pkg/ethereum/mocks"
 )
 
 func TestPrivKey_Equals(t *testing.T) {

@@ -19,10 +19,10 @@ import (
 	"fmt"
 	"os"
 
-	suite "github.com/chronicleprotocol/oracle-suite"
-	"github.com/chronicleprotocol/oracle-suite/cmd"
-	"github.com/chronicleprotocol/oracle-suite/pkg/config/dataprovider"
-	gofer "github.com/chronicleprotocol/oracle-suite/pkg/config/gofernext"
+	suite "github.com/orcfax/oracle-suite"
+	"github.com/orcfax/oracle-suite/cmd"
+	"github.com/orcfax/oracle-suite/pkg/config/dataprovider"
+	gofer "github.com/orcfax/oracle-suite/pkg/config/gofernext"
 	"github.com/spf13/cobra"
 )
 

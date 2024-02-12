@@ -18,10 +18,10 @@ package messages
 import (
 	"sort"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport"
-	"github.com/chronicleprotocol/oracle-suite/pkg/transport/messages/pb"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/bn"
-	"github.com/chronicleprotocol/oracle-suite/pkg/util/maputil"
+	"github.com/orcfax/oracle-suite/pkg/transport"
+	"github.com/orcfax/oracle-suite/pkg/transport/messages/pb"
+	"github.com/orcfax/oracle-suite/pkg/util/bn"
+	"github.com/orcfax/oracle-suite/pkg/util/maputil"
 )
 
 type MessageMap map[string]transport.Message

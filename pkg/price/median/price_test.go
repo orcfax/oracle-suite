@@ -26,7 +26,7 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/ethereum/mocks"
+	"github.com/orcfax/oracle-suite/pkg/ethereum/mocks"
 )
 
 // Hash for the AAABBB asset pair, with the price set to 42 and the age to 1605371361:

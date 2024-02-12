@@ -18,7 +18,7 @@ package internal
 import (
 	"sync"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/log"
+	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 // tdLogger is thread-safe wrapper for logger field.

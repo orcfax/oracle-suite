@@ -29,7 +29,7 @@ import (
 
 	"github.com/orcfax/node-id/pkg/identity"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
 
 const utcTimeFormat = "2006-01-02T15:04:05Z"

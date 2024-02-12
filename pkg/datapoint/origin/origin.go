@@ -24,8 +24,8 @@ import (
 	"github.com/defiweb/go-eth/types"
 	"github.com/zclconf/go-cty/cty"
 
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint"
-	"github.com/chronicleprotocol/oracle-suite/pkg/datapoint/value"
+	"github.com/orcfax/oracle-suite/pkg/datapoint"
+	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
 
 // Origin provides dataPoint prices for a given set of pairs from an external
