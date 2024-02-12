@@ -12,6 +12,27 @@ A tool to fetch and calculate reliable asset prices.
 
 see: [Gofer CLI Readme](cmd/gofer/README.md)
 
+### To build
+
+[Goreleaser][gr-1] is required. Once installed, users can run a command such
+as:
+
+```sh
+make gofer-snapshot
+```
+
+Release builds can be made using:
+
+```sh
+make gofer-release
+```
+
+Releases are currently managed by the GitHub [release][gh-1] action in this
+repository.
+
+[gr-1]: https://goreleaser.com/install/
+[gh-1]: .github/workflows/release.yml
+
 ## License
 
 [The GNU Affero General Public License][affero-1]
