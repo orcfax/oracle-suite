@@ -236,7 +236,7 @@ func processExchangeData(
 				// continue onto the next collector.
 				continue
 			}
-			val, ok := collectorSubPoint.Meta["headers"].(string)
+			val, ok := collectorSubPoint.Meta["response"].(string)
 			if !ok {
 				collectorData = appendError(feedPair, collectorData, fmt.Sprintf(
 					"%s: error with type casting header",

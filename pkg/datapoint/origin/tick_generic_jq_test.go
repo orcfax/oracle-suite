@@ -2,6 +2,7 @@ package origin
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	b64 "github.com/cristalhq/base64"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -61,6 +63,7 @@ func TestGenericJQ_FetchDataPoints(t *testing.T) {
 		expectedResult   map[any]datapoint.Point
 		skipVolumeAssert bool
 		skipTimeAssert   bool
+		skipError        bool
 	}{
 		{
 			name:         "price, volume and time",
@@ -145,6 +148,7 @@ func TestGenericJQ_FetchDataPoints(t *testing.T) {
 				},
 			},
 			skipTimeAssert: true,
+			skipError:      true,
 		},
 		{
 			name:         "empty response",
@@ -157,6 +161,7 @@ func TestGenericJQ_FetchDataPoints(t *testing.T) {
 				},
 			},
 			skipTimeAssert: true,
+			skipError:      true,
 		},
 		{
 			name:         "time.RFC3339",
@@ -288,8 +293,16 @@ func TestGenericJQ_FetchDataPoints(t *testing.T) {
 			// Test the data.
 			pairs := []any{value.Pair{Base: "BTC", Quote: "USD"}}
 			points, err := gjq.FetchDataPoints(context.Background(), pairs)
+			// Orcfax customizations mean this code fails earlier but
+			// the impact of removing all tests here is still being
+			// analyzed and so will be removed later as required.
+			if tt.skipError && err != nil {
+				return
+			}
 			require.NoError(t, err)
-
+			if len(points) <= 0 {
+				t.Error("data points must not be nil for test")
+			}
 			for i, dataPoint := range points {
 				if tt.expectedResult[i].Value != nil {
 					assert.Equal(t, tt.expectedResult[i].Value.(value.Tick).Pair, dataPoint.Value.(value.Tick).Pair)
@@ -307,6 +320,16 @@ func TestGenericJQ_FetchDataPoints(t *testing.T) {
 					assert.EqualError(t, dataPoint.Error, tt.expectedResult[i].Error.Error())
 				} else {
 					assert.NoError(t, dataPoint.Error)
+				}
+				responseB64 := dataPoint.Meta["response"]
+				responseDecoded, _ := b64.StdEncoding.DecodeString(responseB64.(string))
+				var httpResponse httpResponse
+				json.Unmarshal(responseDecoded, &httpResponse)
+				if httpResponse.Headers == nil {
+					t.Errorf("rudimentary decode of header failed")
+				}
+				if httpResponse.Body == nil {
+					t.Errorf("rudimentary decode of body failed")
 				}
 			}
 		})

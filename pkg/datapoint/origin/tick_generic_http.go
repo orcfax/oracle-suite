@@ -16,13 +16,13 @@
 package origin
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
-
-	"encoding/json"
 
 	b64 "github.com/cristalhq/base64"
 
@@ -130,7 +130,42 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 		}
 		defer res.Body.Close()
 
-		responseHeader, _ := json.MarshalIndent(res.Header, "", "  ")
+		// Create a secondary buffer to allow it to be read multiple
+		// times across this function.
+		responseBuffer, _ := io.ReadAll(res.Body)
+		readerOne := io.NopCloser(bytes.NewBuffer(responseBuffer))
+		readerTwo := io.NopCloser(bytes.NewBuffer(responseBuffer))
+		// Assign one copy back to the original CloseReader object.
+		res.Body = readerOne
+
+		rawBuffer := new(strings.Builder)
+		_, _ = io.Copy(rawBuffer, readerTwo)
+		var responseBody map[string]interface{}
+		// The shape of the response may be a dictionary.
+		if err := json.Unmarshal([]byte(rawBuffer.String()), &responseBody); err != nil {
+			var bodyArr []interface{}
+			// The shape of the response may be an array.
+			if err := json.Unmarshal([]byte(rawBuffer.String()), &bodyArr); err != nil {
+				// The shape of the response is not understood or cannot
+				// be parsed, e.g. it is invalid JSON in some way.
+				return points, fmt.Errorf("error processing the response body")
+			}
+			// We create a data key to associate the array with and
+			// attach it here.
+			responseBody = make(map[string]interface{})
+			responseBody["data"] = bodyArr
+		}
+
+		// Create a collector message object consisting of para- and
+		// meta-data about the collection activity.
+		collectorMessage := make(map[string]any)
+		collectorMessage["headers"] = res.Header
+		collectorMessage["body"] = responseBody
+		collectorJSON, err := json.MarshalIndent(collectorMessage, "", "  ")
+		if err != nil {
+			collectorJSON = []byte(fmt.Sprintf("{\"no data\": \"%s\"}", err))
+		}
+
 		resPoints, err := g.callback(ctx, pairs, res.Body)
 		if err != nil {
 			fillDataPointsWithError(points, pairs, err)
@@ -152,7 +187,7 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 			//
 			point.Meta = make(map[string]any)
 			// Add Orcfax metadata.
-			point.Meta["headers"] = b64.StdEncoding.EncodeToString([]byte(responseHeader))
+			point.Meta["response"] = b64.StdEncoding.EncodeToString([]byte(collectorJSON))
 			point.Meta["request_url"] = url
 			point.Meta["collector"] = "tick_generic_jq"
 			points[pair] = point
