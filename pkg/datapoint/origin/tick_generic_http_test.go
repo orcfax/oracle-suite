@@ -2,6 +2,8 @@ package origin
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -123,6 +125,7 @@ func TestGenericHTTP_FetchDataPoints(t *testing.T) {
 			var requests []*http.Request
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				requests = append(requests, r)
+				fmt.Fprintf(w, "{\"test_data\": true}")
 			}))
 			defer server.Close()
 
@@ -142,9 +145,24 @@ func TestGenericHTTP_FetchDataPoints(t *testing.T) {
 			for i, url := range tt.expectedURLs {
 				assert.Equal(t, url, requests[i].URL.String())
 			}
+			if len(points) <= 0 {
+				t.Error("data points must not be nil for test")
+			}
 			for i, dataPoint := range points {
 				assert.Equal(t, tt.expectedResult[i].Value.Print(), dataPoint.Value.Print())
 				assert.Equal(t, tt.expectedResult[i].Time, dataPoint.Time)
+			}
+			// Provide some basic tests for the existence of the response
+			// headers and body that are being set for Orcfax.
+			for _, dataPoint := range points {
+				var httpResponse httpResponse
+				json.Unmarshal(dataPoint.Meta["response"].([]byte), &httpResponse)
+				if httpResponse.Headers == nil {
+					t.Errorf("rudimentary decode of header failed")
+				}
+				if httpResponse.Body == nil {
+					t.Errorf("rudimentary decode of body failed")
+				}
 			}
 		})
 	}
