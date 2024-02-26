@@ -61,6 +61,25 @@ Flags:
 Use "gofer [command] --help" for more information about a command.
 ```
 
+## Basic QA for Orcfax
+
+Orcfax builds on the work of Chronicle Labs by providing more information in
+data responses that can be audited. HTTP response headers and body are included
+in all results so the data trail can be verified.
+
+To access this data easily via this tool, we can use [`jq`][jq-1] using a
+command such as follows:
+
+[jq-1]: https://github.com/jqlang/jq
+
+```sh
+./gofer data ADA/USD ADA/EUR BTC/USD ETH/USD USDT/USD -o orcfax \
+  | jq -r '.[].message.raw[].response'
+```
+
+Via this command we can confirm a response header and body exist for each
+collector, and understand their contents.
+
 ## License
 
 [The GNU Affero General Public License][affero-1]

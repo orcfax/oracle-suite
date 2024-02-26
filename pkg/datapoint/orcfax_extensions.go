@@ -236,10 +236,10 @@ func processExchangeData(
 				// continue onto the next collector.
 				continue
 			}
-			val, ok := collectorSubPoint.Meta["headers"].(string)
+			val, ok := collectorSubPoint.Meta["response"].([]byte)
 			if !ok {
 				collectorData = appendError(feedPair, collectorData, fmt.Sprintf(
-					"%s: error with type casting header",
+					"%s: error with type casting original http responses",
 					origin,
 				))
 				// continue onto the next collector.
@@ -255,7 +255,9 @@ func processExchangeData(
 				buildProperties.Version,
 				buildProperties.Commit,
 			)
-			raw.Response = val
+			responseJSON := make(map[string]any)
+			json.Unmarshal(val, &responseJSON)
+			raw.Response = responseJSON
 			raw.RequestURL = collectorSubPoint.Meta["request_url"].(string)
 			raw.RequestTimestamp = collectorSubPoint.Time.UTC().Format(utcTimeFormat)
 			rawData = append(rawData, raw)
