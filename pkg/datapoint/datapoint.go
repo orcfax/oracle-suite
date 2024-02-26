@@ -217,7 +217,7 @@ func (p Point) MarshalTrace() ([]byte, error) {
 			// The trace report is sensitive to changes in what is
 			// received and so fields are ignored that shouldn't appear
 			// in the output.
-			if k == "headers" || k == "collector" || k == "request_url" {
+			if k == "response" || k == "collector" || k == "request_url" {
 				continue
 			}
 			if k == "type" {

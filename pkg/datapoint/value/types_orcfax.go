@@ -30,11 +30,11 @@ type OrcfaxCollectorData struct {
 // OrcfaxRaw provides a means of storing raw request/response data from
 // price-pair sources.
 type OrcfaxRaw struct {
-	Response         string `json:"response"`
-	RequestURL       string `json:"request_url"`
-	RequestTimestamp string `json:"request_timestamp"`
-	Collector        string `json:"collector"`
-	Error            string `json:"error"`
+	Response         map[string]any `json:"response"`
+	RequestURL       string         `json:"request_url"`
+	RequestTimestamp string         `json:"request_timestamp"`
+	Collector        string         `json:"collector"`
+	Error            string         `json:"error"`
 }
 
 // buildProperties stores information read from the linker flags
