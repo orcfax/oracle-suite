@@ -2,9 +2,10 @@ package origin
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"math/big"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
@@ -131,8 +132,6 @@ func TestCalculateInvariant(t *testing.T) {
 				assert.Equal(t, err, testcase.error)
 			} else {
 				require.NoError(t, err)
-				fmt.Println(invariant.String())
-				fmt.Println(testcase.invariant.String())
 				assert.Equal(t, invariant, testcase.invariant)
 			}
 		})
