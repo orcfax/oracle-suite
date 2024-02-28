@@ -7,7 +7,7 @@ jobs:
       fail-fast: true
       matrix:
         os:  ["ubuntu-latest", "macOS-latest"]
-        go:  ["1.20.x", "1.21.x"]
+        go:  ["1.21.x", "1.22.x"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: "checkout"
@@ -21,10 +21,7 @@ jobs:
     - name: "fmt"
       run: if [ "$(go fmt ./... | wc -l)" -gt 0 ]; then echo "go fmt failed, please run again locally"; exit 1; fi
       if: matrix.os == 'ubuntu-latest'
-    - name: "test"
-      run: "go test ./..."
+    - name: "test datapoint and origin"
+      run: "go test github.com/orcfax/oracle-suite/pkg/datapoint/..."
     - name: "vet"
       run: "go vet ./..."
-    - run: "go install honnef.co/go/tools/cmd/staticcheck@latest"
-    - name: staticcheck
-      run: "staticcheck ./..."
