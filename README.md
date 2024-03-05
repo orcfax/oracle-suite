@@ -1,6 +1,6 @@
-# Oracle Suite
+# Oracle Data Collector Suite
 
-A set of tools that can be used to run Oracles. Original source from
+A set of tools that can be used to run data collectors for oracle networks. Original source from
 [ChronicleLabs][chronicle-1] and updated to provide price-feed data according to
 Orcfax's collector format.
 
