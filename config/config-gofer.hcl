@@ -74,6 +74,12 @@ gofer {
     jq   = "{price: .data.price, time: (.data.time/1000)|round, volume: null}"
   }
 
+  origin "kucoin_prices_simple" {
+    type = "tick_generic_jq"
+    url  = "https://api.kucoin.com/api/v1/prices?base=$${ucquote}&currencies=$${ucbase}"
+    jq   = ".data[] | select(\"$ucbase\") as $price | {price: $price, time: now|round, volume: null}"
+  }
+
   origin "okx" {
     type = "tick_generic_jq"
     url  = "https://www.okx.com/api/v5/market/ticker?instId=$${ucbase}-$${ucquote}&instType=SPOT"
@@ -234,6 +240,7 @@ gofer {
       origin "bitstamp" { query = "ADA/USD" }
       origin "coinbase" { query = "ADA/USD" }
       origin "kraken" { query = "ADA/USD" }
+      origin "kucoin_prices_simple" { query = "ADA/USD" }
       origin "bitfinex_simple" { query = "ADA/USD" }
       origin "hitbtc" { query = "ADA/USD" }
     }
