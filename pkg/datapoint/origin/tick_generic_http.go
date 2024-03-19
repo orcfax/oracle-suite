@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	lg "log"
 	"net/http"
 	"strings"
 
@@ -223,6 +224,7 @@ func (g *TickGenericHTTP) group(pairs []value.Pair) map[string][]value.Pair {
 				return variable.Default
 			}
 		})
+		lg.Printf("compiled URL for %s: %s", pair, url)
 		pairMap[url] = append(pairMap[url], pair)
 	}
 	return pairMap
