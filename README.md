@@ -30,6 +30,48 @@ make gofer-release
 Releases are currently managed by the GitHub [release][gh-1] action in this
 repository.
 
+### Configuring gofer
+
+The oracle suite comes packaged with a number of api sources which can be
+leveraged. The desired combination of these sources, the data requeested from
+each, and the minimum number of responses are set within the
+[config-gofer.hcl](config/config-gofer.hcl) file.
+
+Additional api sources must be added along with parameters for how responses
+will be passed into json.
+
+eg
+```
+  origin "coinbase" {
+    type = "tick_generic_jq"
+    url  = "https://api.pro.coinbase.com/products/$${ucbase}-$${ucquote}/ticker"
+    jq   = "{price: .price, time: .time, volume: .volume}"
+  }
+```
+Then sources can be grouped into a `data_model` and the `min_values` for
+publication set; the min establishes how many sources must be included in a
+publication.
+
+The Orcfax system requires that a minimum of 3 sources participate in each
+publication in order to triangulate the data being reported.
+
+eg
+```
+  data_model "ADA/USD" {
+    median {
+      min_values = 3
+      origin "bitstamp" { query = "ADA/USD" }
+      origin "coinbase" { query = "ADA/USD" }
+      origin "kraken" { query = "ADA/USD" }
+      origin "kucoin_prices_simple" { query = "ADA/USD" }
+      origin "bitfinex_simple" { query = "ADA/USD" }
+      origin "hitbtc" { query = "ADA/USD" }
+    }
+  }
+```
+It is advisable to group more than the minimum necessary sources within the data
+model in order to provide contingencies for when api sources fail.
+
 #### Signing
 
 It is possible to sign the checksums and binaries associated with a release but
