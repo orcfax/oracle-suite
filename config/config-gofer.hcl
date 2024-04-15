@@ -242,7 +242,7 @@ gofer {
       origin "kraken" { query = "ADA/USD" }
       origin "kucoin_prices_simple" { query = "ADA/USD" }
       origin "bitfinex_simple" { query = "ADA/USD" }
-      origin "hitbtc" { query = "ADA/USD" }
+//      origin "hitbtc" { query = "ADA/USD" } re-add later
     }
   }
 
