@@ -41,6 +41,7 @@ Additional api sources must be added along with parameters for how responses
 will be passed into json.
 
 eg
+
 ```
   origin "coinbase" {
     type = "tick_generic_jq"
@@ -48,6 +49,7 @@ eg
     jq   = "{price: .price, time: .time, volume: .volume}"
   }
 ```
+
 Then sources can be grouped into a `data_model` and the `min_values` for
 publication set; the min establishes how many sources must be included in a
 publication.
@@ -56,6 +58,7 @@ The Orcfax system requires that a minimum of 3 sources participate in each
 publication in order to triangulate the data being reported.
 
 eg
+
 ```
   data_model "ADA/USD" {
     median {
@@ -69,8 +72,25 @@ eg
     }
   }
 ```
+
 It is advisable to group more than the minimum necessary sources within the data
 model in order to provide contingencies for when api sources fail.
+
+
+### Submitting a Query
+
+Once the config file is parameterized, users will need to rebuild using `make
+gofer-snapshot`.
+
+By appending the `binary=` output (eg `dist/gofer_linux_amd64_v1/gofer`), users
+can now utiilize gofer commands. Given the example above, users can query their
+configured sources, and pass their responses into json, by using the following:
+
+```sh
+dist/gofer_linux_amd64_v1/gofer data ADA/USD -o orcfax
+```
+
+Any number of {quote}/{base} queries can be listed and executed together.
 
 #### Signing
 
