@@ -231,6 +231,7 @@ gofer {
       origin "coinbase" { query = "ADA/EUR" }
       origin "kraken" { query = "ADA/EUR" }
       origin "binance_simple" { query = "ADA/EUR" }
+      origin "kucoin_prices_simple" { query = "ADA/EUR" }
     }
   }
 
