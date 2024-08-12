@@ -216,7 +216,6 @@ gofer {
       origin "bitstamp" { query = "ADA/BTC" }
       origin "bitfinex_simple" { query = "ADA/BTC" }
       origin "kraken" { query = "ADA/BTC" }
-      origin "okx" { query = "ADA/BTC" }
       origin "upbit" { query = "ADA/BTC" }
       origin "binance" { query = "ADA/BTC" }
       origin "hitbtc" { query = "ADA/BTC" }
