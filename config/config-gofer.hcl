@@ -117,6 +117,7 @@ gofer {
       origin "coinbase" { query = "BTC/USD" }
       origin "gemini" { query = "BTC/USD" }
       origin "kraken" { query = "BTC/USD" }
+      origin "hitbtc" { query = "BTC/USD" }
     }
   }
 
