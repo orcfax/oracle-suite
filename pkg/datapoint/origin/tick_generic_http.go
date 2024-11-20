@@ -24,6 +24,7 @@ import (
 	lg "log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/orcfax/oracle-suite/pkg/datapoint"
 	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
@@ -119,6 +120,8 @@ func (g *TickGenericHTTP) FetchDataPoints(ctx context.Context, query []any) (map
 		}
 		req.Header = g.headers
 		req = req.WithContext(ctx)
+		// Set a request timeout for the http client.
+		g.client.Timeout = time.Duration(10 * time.Second)
 		// Execute TickGenericHTTP request.
 		res, err := g.client.Do(req)
 		if err != nil {
