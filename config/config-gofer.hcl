@@ -32,7 +32,7 @@ gofer {
 
   origin "coinbase" {
     type = "tick_generic_jq"
-    url  = "https://api.pro.coinbase.com/products/$${ucbase}-$${ucquote}/ticker"
+    url  = "https://api.exchange.coinbase.com/products/$${ucbase}-$${ucquote}/ticker"
     jq   = "{price: .price, time: .time, volume: .volume}"
   }
 
