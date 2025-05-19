@@ -148,6 +148,7 @@ gofer {
       origin "coinbase" { query = "ETH/USD" }
       origin "gemini" { query = "ETH/USD" }
       origin "kraken" { query = "ETH/USD" }
+      origin "okx" { query = "ETH/USD" }
     }
   }
 
@@ -177,6 +178,8 @@ gofer {
       origin "coinbase" { query = "SOL/USD" }
       origin "kraken" { query = "SOL/USD" }
       origin "gemini" { query = "SOL/USD" }
+      origin "okx" { query = "SOL/USD" }
+      origin "bitstamp" { query = "SOL/USD" }
     }
   }
 
@@ -241,7 +244,6 @@ gofer {
       origin "kraken" { query = "ADA/USD" }
       origin "kucoin_prices_simple" { query = "ADA/USD" }
       origin "bitfinex_simple" { query = "ADA/USD" }
-//      origin "hitbtc" { query = "ADA/USD" } re-add later
     }
   }
 
@@ -266,22 +268,94 @@ gofer {
     }
   }
 
-  // WMT is in the same boat.
-  data_model "WMT/USD" {
+  // There are no sources for WMTX.
+  data_model "WMTX/USD" {
     median {
       min_values = 3
-      origin "binance" { query = "WMT/USD" }
-      origin "bitstamp" { query = "WMT/USD" }
-      origin "bitfinex_simple" { query = "WMT/USD" }
-      origin "coinbase" { query = "WMT/USD" }
-      origin "gemini" { query = "WMT/USD" }
-      origin "hitbtc" { query = "WMT/USD" }
-      origin "huobi" { query = "WMT/USD" }
-      origin "ishares" { query = "WMT/USD" }
-      origin "kraken" { query = "WMT/USD" }
-      origin "kucoin" { query = "WMT/USD" }
-      origin "okx" { query = "WMT/USD" }
-      origin "upbit" { query = "WMT/USD" }
+      origin "binance" { query = "WMTX/USD" }
+      origin "bitstamp" { query = "WMTX/USD" }
+      origin "bitfinex_simple" { query = "WMTX/USD" }
+      origin "coinbase" { query = "WMTX/USD" }
+      origin "gemini" { query = "WMTX/USD" }
+      origin "hitbtc" { query = "WMTX/USD" }
+      origin "huobi" { query = "WMTX/USD" }
+      origin "ishares" { query = "WMTX/USD" }
+      origin "kraken" { query = "WMTX/USD" }
+      origin "kucoin" { query = "WMTX/USD" }
+      origin "okx" { query = "WMTX/USD" }
+      origin "upbit" { query = "WMTX/USD" }
     }
   }
+
+  // XRP (Ledger) by Ripple.
+  data_model "XRP/USD" {
+    median {
+      min_values = 3
+      origin "coinbase" { query = "XRP/USD" }
+      origin "bitstamp" { query = "XRP/USD" }
+      origin "bitfinex_simple" { query = "XRP/USD" }
+      origin "coinbase" { query = "XRP/USD" }
+      origin "kraken" { query = "XRP/USD" }
+      origin "okx" { query = "XRP/USD" }
+    }
+  }
+
+  // HEDERA (Hashgraph dApp network).
+  data_model "HBAR/USD" {
+    median {
+      min_values = 3
+      origin "coinbase" { query = "HBAR/USD" }
+      origin "bitstamp" { query = "HBAR/USD" }
+      origin "coinbase" { query = "HBAR/USD" }
+      origin "okx" { query = "HBAR/USD" }
+    }
+  }
+
+  // Fetch.io (Artificial Superintelligence Alliance)
+  data_model "FET/USD" {
+    median {
+      min_values = 3
+      origin "bitstamp" { query = "FET/USD" }
+      origin "bitfinex_simple" { query = "FET/USD" }
+      origin "coinbase" { query = "FET/USD" }
+      origin "kraken" { query = "FET/USD" }
+      origin "okx" { query = "FET/USD" }
+    }
+  }
+
+  // COSMOS (ATOM)
+  data_model "ATOM/USD" {
+    median {
+      min_values = 3
+      origin "coinbase" { query = "ATOM/USD" }
+      origin "kraken" { query = "ATOM/USD" }
+      origin "okx" { query = "ATOM/USD" }
+    }
+  }
+
+  // Filecoin.
+  data_model "FIL/USD" {
+    median {
+      min_values = 3
+      origin "bitfinex_simple" { query = "FIL/USD" }
+      origin "coinbase" { query = "FIL/USD" }
+      origin "gemini" { query = "FIL/USD" }
+      origin "hitbtc" { query = "FIL/USD" }
+      origin "kraken" { query = "FIL/USD" }
+      origin "okx" { query = "FIL/USD" }
+    }
+  }
+
+  // Arweave.
+  data_model "AR/USD" {
+    median {
+      min_values = 3
+      origin "hitbtc" { query = "AR/USD" }
+      origin "kraken" { query = "AR/USD" }
+      origin "okx" { query = "AR/USD" }
+      origin "hitbtc" { query = "AR/USD" }
+    }
+  }
+
+
 }
