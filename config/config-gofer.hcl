@@ -86,10 +86,12 @@ gofer {
     jq   = "{price: .data[0].last|tonumber, time: (.data[0].ts|tonumber/1000), volume: .data[0].vol24h|tonumber}"
   }
 
+// expects an array but gets object
+// jq has been changed from main
   origin "upbit" {
     type = "tick_generic_jq"
     url  = "https://api.upbit.com/v1/ticker?markets=$${ucquote}-$${ucbase}"
-    jq   = "{price: .[0].trade_price, time: (.[0].timestamp/1000), volume: .[0].acc_trade_volume_24h}"
+    jq   = "{price: .last, time: .timestamp, volume: .volume}"
   }
 
   data_model "AAVE/USD" {
@@ -244,6 +246,46 @@ gofer {
       origin "kraken" { query = "ADA/USD" }
       origin "kucoin_prices_simple" { query = "ADA/USD" }
       origin "bitfinex_simple" { query = "ADA/USD" }
+    }
+  }
+
+// bitstamp: continue to investigate
+// kraken: works
+  data_model "ADA/JPY" {
+    median {
+      min_values = 3
+      origin "binance" { query = "ADA/JPY" }
+      origin "bitstamp" { query = "ADA/JPY" }
+      origin "bitfinex_simple" { query = "ADA/JPY" }
+      origin "coinbase" { query = "ADA/JPY" }
+      origin "gemini" { query = "ADA/JPY" }
+      origin "hitbtc" { query = "ADA/JPY" }
+      origin "huobi" { query = "ADA/JPY" }
+      origin "ishares" { query = "ADA/JPY" }
+      origin "kraken" { query = "ADA/JPY" }
+      origin "kucoin" { query = "ADA/JPY" }
+      origin "okx" { query = "ADA/JPY" }
+      origin "upbit" { query = "ADA/JPY" }
+    }
+  }
+
+// bitstamp: continue to investigate
+// kraken: works
+  data_model "USD/JPY" {
+    median {
+      min_values = 3
+      origin "binance" { query = "USD/JPY" }
+      origin "bitstamp" { query = "USD/JPY" }
+      origin "bitfinex_simple" { query = "USD/JPY" }
+      origin "coinbase" { query = "USD/JPY" }
+      origin "gemini" { query = "USD/JPY" }
+      origin "hitbtc" { query = "USD/JPY" }
+      origin "huobi" { query = "USD/JPY" }
+      origin "ishares" { query = "USD/JPY" }
+      origin "kraken" { query = "USD/JPY" }
+      origin "kucoin" { query = "USD/JPY" }
+      origin "okx" { query = "USD/JPY" }
+      origin "upbit" { query = "USD/JPY" }
     }
   }
 
