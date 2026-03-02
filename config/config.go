@@ -19,8 +19,5 @@ import (
 	_ "embed"
 )
 
-//go:embed config-defaults.hcl
-var Defaults []byte
-
 //go:embed config-gofer.hcl
 var Gofer []byte

@@ -42,7 +42,6 @@ type Config struct {
 
 func (Config) DefaultEmbeds() [][]byte {
 	return [][]byte{
-		config.Defaults,
 		config.Gofer,
 	}
 }

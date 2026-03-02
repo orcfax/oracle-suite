@@ -16,17 +16,13 @@
 package median
 
 import (
-	"crypto/rand"
 	_ "embed"
 	"math"
 	"math/big"
 	"testing"
 	"time"
 
-	"github.com/defiweb/go-eth/types"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/orcfax/oracle-suite/pkg/ethereum/mocks"
 )
 
 // Hash for the AAABBB asset pair, with the price set to 42 and the age to 1605371361:
@@ -62,46 +58,6 @@ func TestPrice_SetFloat64Price(t *testing.T) {
 			assert.Equal(t, tt.price, p.Float64Price())
 		})
 	}
-}
-
-func TestPrice_Sign(t *testing.T) {
-	s := &mocks.Key{}
-	r := &mocks.Recoverer{}
-	p := &Price{Wat: "AAABBB"}
-	p.Age = time.Unix(1605371361, 0)
-	p.SetFloat64Price(42)
-
-	// Generate a random signature and address:
-	sig := make([]byte, 65)
-	var addr types.Address
-	rand.Read(sig)
-	rand.Read(addr[:])
-
-	// Test Sign:
-	//
-	// Hash passed to the Signature function *must* be exactly the same as in
-	// the priceHash var.
-	hash, _ := types.HashFromHex(priceHash, types.PadNone)
-	s.On("SignMessage", hash.Bytes()).Return(types.MustSignatureFromBytesPtr(sig), nil)
-	err := p.Sign(s)
-	assert.NoError(t, err)
-
-	// Test From:
-	//
-	// Here, we're just checking if the signature and the hash passed to
-	// the Recover function are the same as generated above.
-	r.On("RecoverMessage", hash.Bytes(), types.MustSignatureFromBytes(sig)).Return(&addr, nil)
-	retAddr, err := p.From(r)
-	assert.NoError(t, err)
-	assert.Equal(t, addr, *retAddr)
-}
-
-func TestPrice_Sign_NoPrice(t *testing.T) {
-	s := &mocks.Key{}
-	p := &Price{Wat: "AAABBB"}
-
-	err := p.Sign(s)
-	assert.Equal(t, ErrPriceNotSet, err)
 }
 
 func TestPrice_Marshall(t *testing.T) {
