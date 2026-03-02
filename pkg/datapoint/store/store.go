@@ -17,19 +17,14 @@ package store
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
 
-	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
 	"github.com/orcfax/oracle-suite/pkg/datapoint"
 	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 	"github.com/orcfax/oracle-suite/pkg/log"
 	"github.com/orcfax/oracle-suite/pkg/log/null"
-	"github.com/orcfax/oracle-suite/pkg/transport"
-	"github.com/orcfax/oracle-suite/pkg/transport/messages"
-	"github.com/orcfax/oracle-suite/pkg/util/bn"
 )
 
 const LoggerTag = "DATA_POINT_STORE"
@@ -53,7 +48,6 @@ type Store struct {
 	log    log.Logger
 
 	storage    Storage
-	transport  transport.Service
 	models     []string
 	recoverers []datapoint.Recoverer
 }
@@ -62,9 +56,6 @@ type Store struct {
 type Config struct {
 	// Storage is the storage implementation.
 	Storage Storage
-
-	// Transport is an implementation of transport used to fetch prices from feeds.
-	Transport transport.Service
 
 	// Models is the list of models which are supported by the store.
 	Models []string
@@ -121,48 +112,6 @@ func (p *Store) Wait() <-chan error {
 	return p.waitCh
 }
 
-func (p *Store) collectDataPoint(point *messages.DataPoint) {
-	for _, recoverer := range p.recoverers {
-		if recoverer.Supports(p.ctx, point.Point) {
-			from, err := recoverer.Recover(p.ctx, point.Model, point.Point, point.ECDSASignature)
-			if err != nil {
-				p.log.
-					WithError(err).
-					WithFields(log.Fields{
-						"model": point.Model,
-						"from":  from,
-					}).
-					WithFields(datapoint.PointLogFields(point.Point)).
-					WithAdvice("This is a sign of a misbehaving feed or a serious bug in the feed software").
-					Error("Unable to recover address from the data point")
-				return
-			}
-			sdp := StoredDataPoint{
-				Model:     point.Model,
-				DataPoint: point.Point,
-				From:      *from,
-				Signature: point.ECDSASignature,
-			}
-			if err := p.storage.Add(p.ctx, sdp); err != nil {
-				p.log.
-					WithError(err).
-					WithFields(StoredDataPointLogFields(sdp)).
-					Error("Unable to add data point to the storage")
-				return
-			}
-			p.log.
-				WithFields(StoredDataPointLogFields(sdp)).
-				Debug("Data point collected")
-			return
-		}
-	}
-	p.log.
-		WithField("model", point.Model).
-		WithFields(datapoint.PointLogFields(point.Point)).
-		WithAdvice("This is probably caused by misconfigured feed or an error in the data model").
-		Error("Unable to find recoverer for the data point")
-}
-
 func (p *Store) shouldCollect(model string) bool {
 	for _, a := range p.models {
 		if a == model {
@@ -170,83 +119,6 @@ func (p *Store) shouldCollect(model string) bool {
 		}
 	}
 	return false
-}
-
-func (p *Store) handlePointMessage(msg transport.ReceivedMessage) {
-	if msg.Error != nil {
-		p.log.
-			WithError(msg.Error).
-			WithAdvice("Ignore if occurs occasionally, especially if it is related to temporary network issues").
-			Error("Unable to receive a message from the transport layer")
-		return
-	}
-	point, ok := msg.Message.(*messages.DataPoint)
-	if !ok {
-		p.log.
-			WithFields(transport.ReceivedMessageFields(msg)).
-			WithField("type", fmt.Sprintf("%T", msg.Message)).
-			WithAdvice("This is a bug and must be investigated").
-			Error("Unexpected value returned from the transport layer")
-		return
-	}
-	if !p.shouldCollect(point.Model) {
-		p.log.
-			WithFields(transport.ReceivedMessageFields(msg)).
-			WithField("model", point.Model).
-			Debug("Data point rejected, model is not supported")
-		return
-	}
-	p.collectDataPoint(point)
-}
-
-// handleLegacyPriceMessage handles legacy price messages and converts them to
-// data points. This is temporary solution until the price messages are
-// completely removed.
-//
-// TODO: Remove this method when the price messages are removed.
-func (p *Store) handleLegacyPriceMessage(msg transport.ReceivedMessage) {
-	if msg.Error != nil {
-		p.log.
-			WithError(msg.Error).
-			WithAdvice("Ignore if occurs occasionally, especially if it is related to temporary network issues").
-			Error("Unable to receive a message from the transport layer")
-		return
-	}
-	price, ok := msg.Message.(*messages.Price)
-	if !ok {
-		p.log.
-			WithFields(transport.ReceivedMessageFields(msg)).
-			WithField("type", fmt.Sprintf("%T", msg.Message)).
-			WithAdvice("This is a bug and must be investigated").
-			Error("Unexpected value returned from the transport layer")
-		return
-	}
-	trace := make(map[string]string)
-	_ = json.Unmarshal(price.Trace, &trace)
-	point := &messages.DataPoint{
-		Model: price.Price.Wat,
-		Point: datapoint.Point{
-			Value: value.Tick{
-				Pair:  findPairForLegacyPrice(price.Price.Wat),
-				Price: bn.DecFixedPointFromRawBigInt(price.Price.Val, chronicle.MedianPricePrecision).DecFloatPoint(),
-			},
-			Time:      price.Price.Age,
-			SubPoints: nil,
-			Meta: map[string]any{
-				"legacy": true,
-				"trace":  trace,
-			},
-		},
-		ECDSASignature: price.Price.Sig,
-	}
-	if !p.shouldCollect(point.Model) {
-		p.log.
-			WithFields(transport.ReceivedMessageFields(msg)).
-			WithField("model", point.Model).
-			Debug("Data point rejected, model is not supported")
-		return
-	}
-	p.collectDataPoint(point)
 }
 
 // logDataPointsSince logs a short summary of data points collected since the
@@ -284,21 +156,6 @@ func (p *Store) logDataPointsRoutine() {
 		case t := <-summaryInterval.C:
 			p.logDataPointsSince(lastSummaryTime)
 			lastSummaryTime = t
-		}
-	}
-}
-
-func (p *Store) dataPointCollectorRoutine() {
-	dataPointCh := p.transport.Messages(messages.DataPointV1MessageName)
-	priceCh := p.transport.Messages(messages.PriceV0MessageName) //nolint:staticcheck
-	for {
-		select {
-		case <-p.ctx.Done():
-			return
-		case msg := <-dataPointCh:
-			p.handlePointMessage(msg)
-		case msg := <-priceCh:
-			p.handleLegacyPriceMessage(msg)
 		}
 	}
 }

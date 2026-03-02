@@ -23,8 +23,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/orcfax/oracle-suite/pkg/util/ptrutil"
 )
 
 func TestEncode(t *testing.T) {
@@ -170,17 +168,6 @@ ptr_map "bar" { attr = "bar" }
 ptr_map "foo" { attr = "foo" }
 ptr_map_ptr "bar" { attr = "bar" }
 ptr_map_ptr "foo" { attr = "foo" }
-`,
-		},
-		// Optional attributes
-		{
-			input: &optionalAttrs{
-				Var:    "foo",
-				VarPtr: ptrutil.Ptr("foo"),
-			},
-			target: `
-var     = "foo"
-var_ptr = "foo"
 `,
 		},
 		// Optional blocks

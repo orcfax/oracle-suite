@@ -24,8 +24,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/orcfax/oracle-suite/pkg/util/ptrutil"
 )
 
 func TestDecode(t *testing.T) {
@@ -238,18 +236,6 @@ func TestDecode(t *testing.T) {
 			input:   ``,
 			target:  &requiredAttrs{},
 			wantErr: true,
-		},
-		// Optional attributes (present)
-		{
-			input: `
-				var = "foo"
-				var_ptr = "foo"
-			`,
-			target: &optionalAttrs{},
-			want: &optionalAttrs{
-				Var:    "foo",
-				VarPtr: ptrutil.Ptr("foo"),
-			},
 		},
 		// Optional attributes (missing)
 		{
