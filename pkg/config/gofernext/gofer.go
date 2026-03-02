@@ -24,7 +24,6 @@ import (
 
 	"github.com/orcfax/oracle-suite/config"
 	dataproviderConfig "github.com/orcfax/oracle-suite/pkg/config/dataprovider"
-	ethereumConfig "github.com/orcfax/oracle-suite/pkg/config/ethereum"
 	loggerConfig "github.com/orcfax/oracle-suite/pkg/config/logger"
 	"github.com/orcfax/oracle-suite/pkg/datapoint"
 	"github.com/orcfax/oracle-suite/pkg/log"
@@ -33,9 +32,8 @@ import (
 
 // Config is the configuration for Gofer.
 type Config struct {
-	Gofer    dataproviderConfig.Config `hcl:"gofer,block"`
-	Ethereum *ethereumConfig.Config    `hcl:"ethereum,block,optional"`
-	Logger   *loggerConfig.Config      `hcl:"logger,block,optional"`
+	Gofer  dataproviderConfig.Config `hcl:"gofer,block"`
+	Logger *loggerConfig.Config      `hcl:"logger,block,optional"`
 
 	// HCL fields:
 	Remain  hcl.Body        `hcl:",remain"` // To ignore unknown blocks.
@@ -44,10 +42,8 @@ type Config struct {
 
 func (Config) DefaultEmbeds() [][]byte {
 	return [][]byte{
-		config.Contracts,
 		config.Defaults,
 		config.Gofer,
-		config.Ethereum,
 	}
 }
 
@@ -90,19 +86,8 @@ func (c *Config) Services(baseLogger log.Logger, appName, appVersion string) (pk
 		return nil, err
 	}
 
-	/* Ethereum client is disabled for Orcfax's purposes. If it is needed
-	   in the future then more granular config might be useful here. E.g.
-	   to extend Gofer, a Cardano/Ogmios client could be configured and
-	   supplied to the priceProvider.
-
-	clients, err := c.Ethereum.ClientRegistry(ethereumConfig.Dependencies{Logger: logger})
-	if err != nil {
-		return nil, err
-	}*/
-
 	priceProvider, err := c.Gofer.ConfigureDataProvider(dataproviderConfig.Dependencies{
 		HTTPClient: &http.Client{},
-		Clients:    nil,
 		Logger:     logger,
 	})
 	if err != nil {

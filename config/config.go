@@ -19,26 +19,8 @@ import (
 	_ "embed"
 )
 
-//go:embed config-contracts.hcl
-var Contracts []byte
-
 //go:embed config-defaults.hcl
 var Defaults []byte
 
-//go:embed config-ethereum.hcl
-var Ethereum []byte
-
-//go:embed config-ghost.hcl
-var Ghost []byte
-
 //go:embed config-gofer.hcl
 var Gofer []byte
-
-//go:embed config-spectre.hcl
-var Spectre []byte
-
-//go:embed config-spire.hcl
-var Spire []byte
-
-//go:embed config-transport.hcl
-var Transport []byte

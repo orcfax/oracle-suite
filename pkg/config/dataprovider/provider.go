@@ -26,14 +26,12 @@ import (
 	"github.com/orcfax/oracle-suite/pkg/datapoint/graph"
 	"github.com/orcfax/oracle-suite/pkg/datapoint/origin"
 
-	"github.com/orcfax/oracle-suite/pkg/config/ethereum"
 	"github.com/orcfax/oracle-suite/pkg/log"
 	"github.com/orcfax/oracle-suite/pkg/util/sliceutil"
 )
 
 type Dependencies struct {
 	HTTPClient *http.Client
-	Clients    ethereum.ClientRegistry
 	Logger     log.Logger
 }
 

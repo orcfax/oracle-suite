@@ -57,11 +57,6 @@ gofer {
     jq   = ".data[] | select(.symbol == ($lcbase+$lcquote)) | {price: .close, volume: .vol, time: now|round}"
   }
 
-  origin "ishares" {
-    type = "ishares"
-    url  = "https://ishares.com/uk/individual/en/products/287340/ishares-treasury-bond-1-3yr-ucits-etf?switchLocale=y&siteEntryPassthrough=true"
-  }
-
   origin "kraken" {
     type = "tick_generic_jq"
     url  = "https://api.kraken.com/0/public/Ticker?pair=$${ucbase}/$${ucquote}"
@@ -260,7 +255,6 @@ gofer {
       origin "gemini" { query = "TUSD/USD" }
       origin "hitbtc" { query = "TUSD/USD" }
       origin "huobi" { query = "TUSD/USD" }
-      origin "ishares" { query = "TUSD/USD" }
       origin "kraken" { query = "TUSD/USD" }
       origin "kucoin" { query = "TUSD/USD" }
       origin "okx" { query = "TUSD/USD" }
@@ -279,7 +273,6 @@ gofer {
       origin "gemini" { query = "WMTX/USD" }
       origin "hitbtc" { query = "WMTX/USD" }
       origin "huobi" { query = "WMTX/USD" }
-      origin "ishares" { query = "WMTX/USD" }
       origin "kraken" { query = "WMTX/USD" }
       origin "kucoin" { query = "WMTX/USD" }
       origin "okx" { query = "WMTX/USD" }
