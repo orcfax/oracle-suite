@@ -22,8 +22,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/defiweb/go-eth/types"
-
 	"github.com/orcfax/oracle-suite/pkg/contract/chronicle"
 	"github.com/orcfax/oracle-suite/pkg/datapoint"
 	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
@@ -35,42 +33,6 @@ import (
 )
 
 const LoggerTag = "DATA_POINT_STORE"
-
-// DataPointProvider is an interface which provides latest data points from
-// feeds.
-type DataPointProvider interface {
-	// LatestFrom returns the latest data point from a given address.
-	LatestFrom(ctx context.Context, from types.Address, model string) (StoredDataPoint, bool, error)
-
-	// Latest returns the latest data points from all addresses.
-	Latest(ctx context.Context, model string) (map[types.Address]StoredDataPoint, error)
-}
-
-// Storage is underlying storage implementation for the Store.
-//
-// It must be thread-safe.
-type Storage interface {
-	// Add adds a data point to the store.
-	//
-	// Adding a data point with a timestamp older than the latest data point
-	// for the same address and model will be ignored.
-	Add(ctx context.Context, point StoredDataPoint) error
-
-	// LatestFrom returns the latest data point from a given address.
-	LatestFrom(ctx context.Context, from types.Address, model string) (point StoredDataPoint, ok bool, err error)
-
-	// Latest returns the latest data points from all addresses.
-	Latest(ctx context.Context, model string) (points map[types.Address]StoredDataPoint, err error)
-}
-
-// StoredDataPoint is a struct which represents a data point stored in the
-// Store.
-type StoredDataPoint struct {
-	Model     string
-	DataPoint datapoint.Point
-	From      types.Address
-	Signature types.Signature
-}
 
 func StoredDataPointLogFields(o StoredDataPoint) log.Fields {
 	f := log.Fields{
@@ -157,16 +119,6 @@ func (p *Store) Start(ctx context.Context) error {
 // Wait implements the supervisor.Service interface.
 func (p *Store) Wait() <-chan error {
 	return p.waitCh
-}
-
-// LatestFrom implements the DataPointProvider interface.
-func (p *Store) LatestFrom(ctx context.Context, from types.Address, model string) (StoredDataPoint, bool, error) {
-	return p.storage.LatestFrom(ctx, from, model)
-}
-
-// Latest implements the DataPointProvider interface.
-func (p *Store) Latest(ctx context.Context, model string) (map[types.Address]StoredDataPoint, error) {
-	return p.storage.Latest(ctx, model)
 }
 
 func (p *Store) collectDataPoint(point *messages.DataPoint) {

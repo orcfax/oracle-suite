@@ -21,8 +21,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/defiweb/go-eth/types"
-
 	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 	"github.com/orcfax/oracle-suite/pkg/log"
 	"github.com/orcfax/oracle-suite/pkg/util/treerender"
@@ -54,24 +52,6 @@ type Provider interface {
 	// Models describes price models which are used to calculate prices.
 	// If no pairs are specified, models for all pairs are returned.
 	Models(ctx context.Context, models ...string) (map[string]Model, error)
-}
-
-// Signer is responsible for signing data points.
-type Signer interface {
-	// Supports returns true if the signer supports the given data point.
-	Supports(ctx context.Context, data Point) bool
-
-	// Sign signs a data point using the given key.
-	Sign(ctx context.Context, model string, data Point) (*types.Signature, error)
-}
-
-// Recoverer is responsible for recovering addresses from signatures.
-type Recoverer interface {
-	// Supports returns true if the recoverer supports the given data point.
-	Supports(ctx context.Context, data Point) bool
-
-	// Recover recovers the address from the given signature.
-	Recover(ctx context.Context, model string, data Point, signature types.Signature) (*types.Address, error)
 }
 
 // Model is a simplified representation of a model which is used to obtain

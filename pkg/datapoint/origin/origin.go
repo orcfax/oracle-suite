@@ -21,9 +21,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/defiweb/go-eth/types"
-	"github.com/zclconf/go-cty/cty"
-
 	"github.com/orcfax/oracle-suite/pkg/datapoint"
 	"github.com/orcfax/oracle-suite/pkg/datapoint/value"
 )
@@ -90,56 +87,6 @@ func (a AssetPair) IndexOf(token string) int {
 		}
 	}
 	return -1
-}
-
-type ContractAddresses map[AssetPair]types.Address
-
-func (c ContractAddresses) MarshalJSON() ([]byte, error) {
-	t := make(map[string]types.Address, len(c))
-	for key, address := range c {
-		var s string
-		for i := 0; i < len(key); i++ {
-			if i > 0 {
-				s += "/" // separator
-			}
-			s += key[i]
-		}
-		t[s] = address
-	}
-	return json.Marshal(t)
-}
-
-func (c ContractAddresses) MarshalHCL() (cty.Value, error) {
-	if c == nil {
-		return cty.NilVal, nil
-	}
-	mapAddresses := make(map[string]cty.Value)
-	for key, value := range c {
-		pairs := key.String()
-		mapAddresses[pairs] = cty.StringVal(value.String())
-	}
-	return cty.MapVal(mapAddresses), nil
-}
-
-// ByPair returns the contract address and the indexes of tokens, where the contract contains the given pair
-// If not found base and quote token, return zero address and -1 for indexes
-// For example, if we have a pool address of USDT/WBTC/WETH, and we are looking for USDT/WETH,
-// then ByPair return the pool address and the indexes of 0, 2 (index is based on zero)
-func (c ContractAddresses) ByPair(p value.Pair) (types.Address, int, int, error) {
-	for key, address := range c {
-		// key is the list of tokens that the pool contains.
-		// It should be listed with the separator '/' and is sorted by ascending order.
-		// i.e. `3pool` in curve is the pool of DAI, USDC and USDT,
-		// so it is defined as "DAI/USDC/USDT = 0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7"
-		baseIndex := key.IndexOf(p.Base)
-		quoteIndex := key.IndexOf(p.Quote)
-		if baseIndex >= 0 && 0 <= quoteIndex && baseIndex != quoteIndex {
-			// if p is inverted pair, baseIndex should be greater than quoteIndex
-			return address, baseIndex, quoteIndex, nil
-		}
-	}
-	// not found the pair
-	return types.ZeroAddress, -1, -1, fmt.Errorf("failed to get contract address for pair: %s", p.String())
 }
 
 func fillDataPointsWithError(points map[any]datapoint.Point, pairs []value.Pair, err error) map[any]datapoint.Point {

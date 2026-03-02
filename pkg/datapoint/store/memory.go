@@ -18,8 +18,6 @@ package store
 import (
 	"context"
 	"sync"
-
-	"github.com/defiweb/go-eth/types"
 )
 
 // MemoryStorage is an in-memory implementation of Storage.
@@ -45,30 +43,4 @@ func (m *MemoryStorage) Add(_ context.Context, point StoredDataPoint) error {
 	}
 	m.ds[dataPointKey{feed: point.From, model: point.Model}] = point
 	return nil
-}
-
-// LatestFrom implements the Storage interface.
-func (m *MemoryStorage) LatestFrom(_ context.Context, from types.Address, model string) (StoredDataPoint, bool, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	p, ok := m.ds[dataPointKey{feed: from, model: model}]
-	return p, ok, nil
-}
-
-// Latest implements the Storage interface.
-func (m *MemoryStorage) Latest(_ context.Context, model string) (map[types.Address]StoredDataPoint, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	ps := make(map[types.Address]StoredDataPoint)
-	for k, v := range m.ds {
-		if k.model == model {
-			ps[k.feed] = v
-		}
-	}
-	return ps, nil
-}
-
-type dataPointKey struct {
-	feed  types.Address
-	model string
 }

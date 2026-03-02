@@ -22,15 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
-	"strings"
 	"time"
-
-	"github.com/defiweb/go-eth/crypto"
-	"github.com/defiweb/go-eth/hexutil"
-	"github.com/defiweb/go-eth/types"
-	"github.com/defiweb/go-eth/wallet"
-
-	"github.com/orcfax/oracle-suite/pkg/log"
 )
 
 const PriceMultiplier = 1e18
@@ -43,10 +35,9 @@ func errUnmarshalling(s string, err error) error {
 }
 
 type Price struct {
-	Wat string          // Wat is the asset name.
-	Val *big.Int        // Val is the asset price multiplied by PriceMultiplier.
-	Age time.Time       // Age is the time when the price was obtained.
-	Sig types.Signature // Sig is the signature of the price.
+	Wat string    // Wat is the asset name.
+	Val *big.Int  // Val is the asset price multiplied by PriceMultiplier.
+	Age time.Time // Age is the time when the price was obtained.
 }
 
 // jsonPrice is the JSON representation of the Price structure.
@@ -57,15 +48,6 @@ type jsonPrice struct {
 	V   string `json:"v"`
 	R   string `json:"r"`
 	S   string `json:"s"`
-}
-
-func (p *Price) SetHexPrice(price string) error {
-	v, err := hexutil.HexToBigInt(price)
-	if err != nil {
-		return err
-	}
-	p.Val = v
-	return nil
 }
 
 func (p *Price) SetFloat64Price(price float64) {
@@ -82,39 +64,6 @@ func (p *Price) Float64Price() float64 {
 	return f
 }
 
-func (p *Price) From(r crypto.Recoverer) (*types.Address, error) {
-	return r.RecoverMessage(p.Hash().Bytes(), p.Sig)
-}
-
-func (p *Price) Sign(signer wallet.Key) error {
-	if p.Val == nil {
-		return ErrPriceNotSet
-	}
-	signature, err := signer.SignMessage(p.Hash().Bytes())
-	if err != nil {
-		return err
-	}
-	p.Sig = *signature
-	return nil
-}
-
-func (p *Price) Fields(r crypto.Recoverer) log.Fields {
-	from := "*invalid signature*"
-	if addr, err := p.From(r); err == nil {
-		from = addr.String()
-	}
-	return log.Fields{
-		"from": from,
-		"wat":  p.Wat,
-		"age":  p.Age.UTC().Format(time.RFC3339),
-		"val":  p.Val.String(),
-		"hash": hex.EncodeToString(p.Hash().Bytes()),
-		"V":    hex.EncodeToString(p.Sig.V.Bytes()),
-		"R":    hex.EncodeToString(p.Sig.R.Bytes()),
-		"S":    hex.EncodeToString(p.Sig.S.Bytes()),
-	}
-}
-
 func (p *Price) MarshalJSON() ([]byte, error) {
 	bts := p.Sig.Bytes()
 	v := bts[64]
@@ -128,51 +77,6 @@ func (p *Price) MarshalJSON() ([]byte, error) {
 		R:   hex.EncodeToString(r),
 		S:   hex.EncodeToString(s),
 	})
-}
-
-func (p *Price) UnmarshalJSON(bytes []byte) error {
-	j := &jsonPrice{}
-	if err := json.Unmarshal(bytes, j); err != nil {
-		return errUnmarshalling("price fields errors", err)
-	}
-
-	j.V = strings.TrimPrefix(j.V, "0x")
-	j.R = strings.TrimPrefix(j.R, "0x")
-	j.S = strings.TrimPrefix(j.S, "0x")
-
-	if (len(j.V)+len(j.R)+len(j.S) != 0) && (len(j.V) != 2 || len(j.R) != 64 || len(j.S) != 64) {
-		return errUnmarshalling("VRS fields contain invalid signature lengths", nil)
-	}
-
-	p.Wat = j.Wat
-	p.Val, _ = new(big.Int).SetString(j.Val, 10)
-	p.Age = time.Unix(j.Age, 0)
-
-	v, err := hex.DecodeString(j.V)
-	if err != nil {
-		return errUnmarshalling("unable to decode V param", err)
-	}
-	r, err := hex.DecodeString(j.R)
-	if err != nil {
-		return errUnmarshalling("unable to decode R param", err)
-	}
-	s, err := hex.DecodeString(j.S)
-	if err != nil {
-		return errUnmarshalling("unable to decode S param", err)
-	}
-
-	p.Sig = types.SignatureFromVRS(
-		new(big.Int).SetBytes(v),
-		new(big.Int).SetBytes(r),
-		new(big.Int).SetBytes(s),
-	)
-
-	return nil
-}
-
-// Hash is an equivalent of keccak256(abi.encodePacked(val_, age_, wat))) in Solidity.
-func (p *Price) Hash() types.Hash {
-	return crypto.Keccak256(p.h())
 }
 
 func (p *Price) h() []byte {
