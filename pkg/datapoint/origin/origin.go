@@ -39,8 +39,6 @@ type Origin interface {
 	FetchDataPoints(ctx context.Context, query []any) (map[any]datapoint.Point, error)
 }
 
-const ether = 1e18
-
 const maxTokenCount = 3 // Maximum token count being used as key of the contract
 
 type AssetPair [maxTokenCount]string

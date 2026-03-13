@@ -172,7 +172,7 @@ func TestGenericHTTP_FetchDataPointsOrcfax(t *testing.T) {
 			var requests []*http.Request
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				requests = append(requests, r)
-				fmt.Fprintf(w, tt.payload)
+				fmt.Fprintf(w, "%s", tt.payload)
 			}))
 			defer server.Close()
 
@@ -188,7 +188,7 @@ func TestGenericHTTP_FetchDataPointsOrcfax(t *testing.T) {
 				// any further as Orcfax needs to provide auditable
 				// data.
 				if !strings.Contains(fmt.Sprint(err), "error processing the response body") {
-					t.Errorf(fmt.Sprint(err))
+					t.Errorf("%s", err)
 				}
 				return
 			}

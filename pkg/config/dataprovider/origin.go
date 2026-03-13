@@ -65,10 +65,6 @@ type configOriginTickGenericJQ struct {
 	JQ  string `hcl:"jq"`
 }
 
-// averageFromBlocks is a list of blocks distances from the latest blocks from
-// which prices will be averaged.
-var averageFromBlocks = []int64{0, 10, 20}
-
 func (c *configOrigin) PostDecodeBlock(
 	ctx *hcl.EvalContext,
 	_ *hcl.BodySchema,

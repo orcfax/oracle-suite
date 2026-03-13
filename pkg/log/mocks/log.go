@@ -11,8 +11,6 @@ import (
 type Logger struct {
 	mock mock.Mock
 	mu   sync.Mutex
-
-	fields log.Fields
 }
 
 func New() *Logger {
