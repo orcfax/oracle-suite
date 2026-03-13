@@ -2,40 +2,44 @@
 
 # help
 help:
-	@just -l
+    @just -l
 
-# Build a snapshot of gofer.
+# Build a snapshot of gofer
+[working-directory: 'cmd/gofer']
 gofer-snapshot:
-	cd cmd/gofer;
-	goreleaser build --snapshot --single-target --clean -f cmd/gofer/.goreleaser.yml
+    goreleaser build --snapshot --single-target --clean -f .goreleaser.yml
 
-# Build a gofer release..
+# Build a gofer release
+[working-directory: 'cmd/gofer']
 gofer-release:
-	cd cmd/gofer;
-	goreleaser release --skip=publish --clean -f cmd/gofer/.goreleaser.yml --skip=sign
+    goreleaser release --skip=publish --clean -f .goreleaser.yml --skip=sign
 
-# Build a gofer release..
+# Build a gofer release
+[working-directory: 'cmd/gofer']
 gofer-release-sign:
-	cd cmd/gofer;
-	goreleaser release --skip=publish --clean -f cmd/gofer/.goreleaser.yml
+    cd cmd/gofer;
+    goreleaser release --skip=publish --clean -f .goreleaser.yml
 
-# Lint the source code (--ignore-errors to ignore errs)
+# Lint the source code
 lint:
-	@echo ignore errors with "--ignore-errors"
-	go fmt ./...
-	staticcheck ./...
-	golint ./...
-	go vet ./...
+    - goimports -w .
+    - go fmt ./...
+    - go vet ./...
+    - staticcheck ./...
 
-# Run pre-commit-checks.
+# Run the tests
+test:
+    - go test ./...
+
+# Run pre-commit-checks
 pre-commit-checks:
-	pre-commit run --all-files
+    pre-commit run --all-files
 
-# Upgrade golang dependencies.
+# Upgrade golang dependencies
 upgrade:
-	go get -u ./...
-	go mod tidy
+    go get -u ./...
+    go mod tidy
 
-# Verify checksum signing (useful for outputting GPG info).
+# Verify checksum signing (useful for outputting GPG info)
 verify-checksum-signature:
-	gpg --verify dist/checksums_sha256.txt.sig
+    gpg --verify dist/checksums_sha256.txt.sig
