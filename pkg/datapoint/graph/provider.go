@@ -3,6 +3,7 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 	"sort"
 
 	"github.com/orcfax/oracle-suite/pkg/datapoint"
@@ -56,19 +57,25 @@ func (p Provider) DataPoint(ctx context.Context, model string) (datapoint.Point,
 
 // DataPoints implements the data.Provider interface.
 func (p Provider) DataPoints(ctx context.Context, models ...string) (map[string]datapoint.Point, error) {
-	nodes := make([]Node, len(models))
-	for i, model := range models {
+	var nodes []Node
+	var validModels []string
+	for _, model := range models {
 		node, ok := p.models[model]
 		if !ok {
-			return nil, ErrModelNotFound{model: model}
+			log.Printf("model %s: not found, check config if it's truly needed", model)
+			continue
 		}
-		nodes[i] = node
+		validModels = append(validModels, model)
+		nodes = append(nodes, node)
+	}
+	if len(validModels) < 1 {
+		return nil, ErrModelNotFound{"no models found"}
 	}
 	if p.updater != nil {
 		p.updater.Update(ctx, nodes)
 	}
-	points := make(map[string]datapoint.Point, len(models))
-	for i, model := range models {
+	points := make(map[string]datapoint.Point, len(validModels))
+	for i, model := range validModels {
 		points[model] = nodes[i].DataPoint()
 	}
 	return points, nil
